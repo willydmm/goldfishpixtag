@@ -1,0 +1,57 @@
+/* homePage.css */
+
+.homepage {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .search-form {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-form input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+  }
+  
+  .search-form button {
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-left: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+  }
+  
+  .search-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .upload-button, .logout-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .upload-button:hover, .logout-button:hover {
+    background-color: #218838;
+  }
+  
+  .logout-button {
+    background-color: #dc3545;
+  }
+  
+  .logout-button:hover {
+    background-color: #c82333;
+  }
+  
