@@ -1,7 +1,7 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProviderClient, InitiateAuthCommand, SignUpCommand, ConfirmSignUpCommand, AuthFlowType } from "@aws-sdk/client-cognito-identity-provider";
 import config from "./config.json";
 
 export const cognitoClient = new CognitoIdentityProviderClient({
@@ -10,7 +10,7 @@ export const cognitoClient = new CognitoIdentityProviderClient({
 
 export const signIn = async (username: string, password: string) => {
   const params = {
-    AuthFlow: "USER_PASSWORD_AUTH",
+    AuthFlow: "USER_PASSWORD_AUTH" as AuthFlowType, // Ensure AuthFlowType is used
     ClientId: config.clientId,
     AuthParameters: {
       USERNAME: username,
@@ -32,7 +32,7 @@ export const signIn = async (username: string, password: string) => {
   }
 };
 
-export const signUp = async (email: string, password: string) => {
+export const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
   const params = {
     ClientId: config.clientId,
     Username: email,
@@ -41,6 +41,14 @@ export const signUp = async (email: string, password: string) => {
       {
         Name: "email",
         Value: email,
+      },
+      {
+        Name: "given_name",
+        Value: firstName,
+      },
+      {
+        Name: "family_name",
+        Value: lastName,
       },
     ],
   };

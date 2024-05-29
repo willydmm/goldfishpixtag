@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="homepage">
-      {userInfo && <h1>Welcome, {userInfo.email}</h1>}
+      {userInfo && <h1>Welcome, {userInfo.given_name}</h1>}
       <form onSubmit={handleSearch} className="search-form">
         <input
           type="text"
