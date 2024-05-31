@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './loginPage';
 import HomePage from './homePage';
 import ConfirmUserPage from './confirmUserPage';
+import GoogleCallbackPage from './GoogleCallBackPage';
 import './App.css'
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/confirm" element={<ConfirmUserPage />} />
         <Route path="/home" element={isAuthenticated() ? <HomePage /> : <Navigate replace to="/login" />} />
+        <Route path="/google-callback" element={<GoogleCallbackPage />} />
       </Routes>
     </BrowserRouter>
   );

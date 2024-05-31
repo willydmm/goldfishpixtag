@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signIn, signUp } from './authService';
+import { signIn, signUp, signInWithGoogle } from './authService';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -180,6 +180,7 @@ const LoginPage = () => {
       <button onClick={() => setIsSignUp(!isSignUp)}>
         {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
       </button>
+      <button onClick={signInWithGoogle}>Sign In with Google</button>
     </div>
   );
 };
