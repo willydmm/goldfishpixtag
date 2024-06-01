@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './homePage.css';
 
+
 function parseJwt(token: string) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -22,6 +23,7 @@ const HomePage: React.FC = () => {
     const idToken = sessionStorage.getItem('idToken');
     if (idToken) {
       const parsedToken = parseJwt(idToken);
+      console.log(parsedToken)
       setUserInfo(parsedToken);
       document.title = `Goldfish PixTag`;
     } else {
@@ -127,6 +129,14 @@ const HomePage: React.FC = () => {
     reader.readAsDataURL(file);
   };
 
+  const handleDelete = () => {
+    navigate('/delete');
+  };
+
+  const handleViewAllImages = () => {
+    navigate('/viewallimages');
+  };
+
   return (
     <div className="homepage">
       {userInfo && <h1>Welcome, {userInfo.given_name}</h1>}
@@ -155,6 +165,8 @@ const HomePage: React.FC = () => {
         <input type="file" name="fileToUpload" id="fileToUpload" />
         <button type="submit">Upload Image</button>
       </form>
+      <button onClick={handleViewAllImages}>Image Gallery</button>
+      <button onClick={handleDelete}>Delete Images</button>
       <button onClick={handleLogout} className="logout-button">Logout</button>
     </div>
   );
