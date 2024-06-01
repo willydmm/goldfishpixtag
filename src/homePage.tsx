@@ -16,6 +16,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<string[]>([]);
 
   useEffect(() => {
     const idToken = sessionStorage.getItem('idToken');
@@ -33,10 +34,34 @@ const HomePage: React.FC = () => {
     navigate('/login');
   };
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: Implement search functionality
-    console.log('Searching for:', searchQuery);
+
+    try {
+      const idToken = sessionStorage.getItem('idToken');
+      const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
+
+      const tags = tagsWithCounts.reduce((acc, tagCount) => {
+        const [tag, count] = tagCount.split(' ').map(item => item.trim());
+        acc[tag] = parseInt(count, 10) || 1;
+        return acc;
+      }, {});
+
+      const response = await fetch('https://jyufwbyv84.execute-api.us-east-1.amazonaws.com/dev/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ tags })
+      });
+
+      const result = await response.json();
+      setSearchResults(result.links);
+    } catch (error) {
+      console.error('Error during search:', error);
+      alert('An error occurred while searching for images.');
+    }
   };
 
   const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -104,6 +129,18 @@ const HomePage: React.FC = () => {
         />
         <button type="submit">Search</button>
       </form>
+      {searchResults.length > 0 && (
+        <div className="search-results">
+          <h2>Search Results:</h2>
+          <ul>
+            {searchResults.map((url, index) => (
+              <li key={index}>
+                <img src={url} alt={`Result ${index}`} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <form onSubmit={handleUpload} id="uploadForm" className="upload-form">
         <input type="file" name="fileToUpload" id="fileToUpload" />
         <button type="submit">Upload Image</button>
