@@ -16,6 +16,7 @@ const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<string[]>([]);
 
   useEffect(() => {
     const idToken = sessionStorage.getItem('idToken');
@@ -33,11 +34,45 @@ const HomePage: React.FC = () => {
     navigate('/login');
   };
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO: Implement search functionality
-    console.log('Searching for:', searchQuery);
+
+    try {
+      const idToken = sessionStorage.getItem('idToken');
+      const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
+
+      const tags = tagsWithCounts.reduce((acc, tagCount) => {
+        const match = tagCount.match(/^(.*)\s(\d+)$/);
+        if (match) {
+          const [, tag, count] = match;
+          acc[tag.trim()] = parseInt(count, 10);
+        } else {
+          acc[tagCount.trim()] = 1;
+        }
+        console.log(acc);
+        return acc;
+      }, {});
+      
+
+      const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ tags })
+      });
+
+      const result = await response.json();
+      setSearchResults(result.links);
+      // Log the list of URLs to the console
+      console.log('Search Results URLs:', result.links);
+    } catch (error) {
+      console.error('Error during search:', error);
+      alert('An error occurred while searching for images.');
+    }
   };
+
 
   const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -104,6 +139,18 @@ const HomePage: React.FC = () => {
         />
         <button type="submit">Search</button>
       </form>
+      {searchResults.length > 0 && (
+        <div className="search-results">
+          <h2>Search Results:</h2>
+          <ul>
+            {searchResults.map((url, index) => (
+              <li key={index}>
+                <img src={url} alt={`Result ${index}`} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <form onSubmit={handleUpload} id="uploadForm" className="upload-form">
         <input type="file" name="fileToUpload" id="fileToUpload" />
         <button type="submit">Upload Image</button>
