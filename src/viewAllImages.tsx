@@ -56,27 +56,12 @@ const ViewAllImagesPage = () => {
 
     return (
         <div>
-            <header data-bs-theme="dark">
-                <div className="navbar navbar-dark bg-dark shadow-sm">
-                    <div className="container">
-                        <a href="#" className="navbar-brand d-flex align-items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" aria-hidden="true" className="me-2" viewBox="0 0 24 24">
-                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                                <circle cx="12" cy="13" r="4"></circle>
-                            </svg>
-                            <strong>Album</strong>
-                        </a>
-                    </div>
-                </div>
-            </header>
-
             <main>
                 <section className="py-5 text-center container">
                     <div className="row py-lg-5">
-                        <div className="col-lg-6 col-md-8 mx-auto">
-                            <h1 className="fw-light">Album example</h1>
-                            <p className="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
-                        </div>
+                        <div className="col-lg-4 col-md-4 mx-auto">
+                            <h1 className="fw-light">Photo Gallery</h1>
+                            </div>
                     </div>
                 </section>
 
@@ -88,13 +73,13 @@ const ViewAllImagesPage = () => {
                                     <div className="card shadow-sm">
                                         <img src={url} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
                                         <div className="card-body">
-                                            <p className="card-text">This is a thumbnail image.</p>
+                                            <p className="card-text">Tags: {}</p>
                                             <div className="d-flex justify-content-between align-items-center">
                                                 <div className="btn-group">
                                                     <button type="button" className="btn btn-sm btn-outline-secondary">View</button>
-                                                    <button type="button" className="btn btn-sm btn-outline-secondary">Edit</button>
+                                                    <button type="button" className="btn btn-sm btn-outline-secondary">Add Tag</button>
+                                                    <button type="button" className="btn btn-sm btn-outline-secondary">Delete Tag</button>
                                                 </div>
-                                                <small className="text-muted">9 mins</small>
                                             </div>
                                         </div>
                                     </div>

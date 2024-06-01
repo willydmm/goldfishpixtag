@@ -11,6 +11,14 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  margin: 0;
+}
+
+.homepage{
+  margin-left: 50px;
+  margin-right: 50px;
+
 }
 
 a {
@@ -22,12 +30,15 @@ a:hover {
   color: #535bf2;
 }
 
+p{
+  margin: 0;
+}
+
 body {
   margin: 0;
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {

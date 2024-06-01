@@ -23,7 +23,6 @@ const HomePage: React.FC = () => {
     const idToken = sessionStorage.getItem('idToken');
     if (idToken) {
       const parsedToken = parseJwt(idToken);
-      console.log(parsedToken)
       setUserInfo(parsedToken);
       document.title = `Goldfish PixTag`;
     } else {
@@ -138,36 +137,42 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="homepage">
+    <div id="homepage">
       {userInfo && <h1>Welcome, {userInfo.given_name}</h1>}
-      <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          placeholder="Search for images..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="submit">Search</button>
+      <form onSubmit={handleSearch} className="mb-3">
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search for images..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button className="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
       </form>
-      {searchResults.length > 0 && (
+      {searchResults.length > 0 ? (
         <div className="search-results">
           <h2>Search Results:</h2>
-          <ul>
+          <ul className="list-unstyled">
             {searchResults.map((url, index) => (
               <li key={index}>
-                <img src={url} alt={`Result ${index}`} />
+                <img src={url} alt={`Result ${index}`} style={{ width: '100px', height: '100px' }} />
               </li>
             ))}
           </ul>
         </div>
+      ) : (
+        <p>No search results to display.</p>
       )}
-      <form onSubmit={handleUpload} id="uploadForm" className="upload-form">
-        <input type="file" name="fileToUpload" id="fileToUpload" />
-        <button type="submit">Upload Image</button>
+      <form onSubmit={handleUpload} className="mb-3">
+        <input type="file" name="fileToUpload" id="fileToUpload" className="form-control" />
+        <button type="submit" className="btn btn-primary mt-2">Upload Image</button>
       </form>
-      <button onClick={handleViewAllImages}>Image Gallery</button>
-      <button onClick={handleDelete}>Delete Images</button>
-      <button onClick={handleLogout} className="logout-button">Logout</button>
+      <div className="btn-group" role="group" aria-label="Basic example">
+        <button onClick={handleViewAllImages} className="btn btn-secondary">Image Gallery</button>
+        <button onClick={handleDelete} className="btn btn-danger">Delete Images</button>
+      </div>
     </div>
   );
 };

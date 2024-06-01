@@ -1,7 +1,4 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -20,4 +17,8 @@
 
 button {
   margin: 0.5em;
+}
+
+header {
+  background-color:RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
 }
