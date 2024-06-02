@@ -27,8 +27,8 @@ const SearchResultsPage = () => {
             if (!response.ok) {
             throw new Error('Failed to fetch results');
             }
-            const data = await response.json();
-            setImages(data.images);
+            const data = await response.blob();
+            console.log(data);
         } catch (error) {
             console.error('Failed to fetch images:', error);
             setError('Failed to fetch search results.');
