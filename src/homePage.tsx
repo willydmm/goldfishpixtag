@@ -1,40 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './homePage.css';
-
-
-function parseJwt(token: string) {
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
-
-  return JSON.parse(jsonPayload);
-}
-
-const HomePage: React.FC = () => {
-  const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<string[]>([]);
-
-  useEffect(() => {
-    const idToken = sessionStorage.getItem('idToken');
-    if (idToken) {
-      const parsedToken = parseJwt(idToken);
-      setUserInfo(parsedToken);
-      document.title = `Goldfish PixTag`;
-    } else {
-      navigate('/login');
-    }
-  }, [navigate]);
-
-  const handleLogout = () => {
-    sessionStorage.clear();
-    navigate('/login');
-  };
-
+/*
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -73,7 +37,50 @@ const HomePage: React.FC = () => {
       alert('An error occurred while searching for images.');
     }
   };
+  */
 
+
+
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './homePage.css';
+
+function parseJwt(token: string) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
+const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
+    const idToken = sessionStorage.getItem('idToken');
+    if (idToken) {
+      const parsedToken = parseJwt(idToken);
+      setUserInfo(parsedToken);
+      document.title = `Goldfish PixTag`;
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    navigate('/login');
+  };
+
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    navigate('/viewallimages', { state: { searchQuery } });
+  };
 
   const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -151,20 +158,6 @@ const HomePage: React.FC = () => {
           <button className="btn btn-outline-secondary" type="submit">Search</button>
         </div>
       </form>
-      {searchResults.length > 0 ? (
-        <div className="search-results">
-          <h2>Search Results:</h2>
-          <ul className="list-unstyled">
-            {searchResults.map((url, index) => (
-              <li key={index}>
-                <img src={url} alt={`Result ${index}`} style={{ width: '100px', height: '100px' }} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <p>No search results to display.</p>
-      )}
       <form onSubmit={handleUpload} className="mb-3">
         <input type="file" name="fileToUpload" id="fileToUpload" className="form-control" />
         <button type="submit" className="btn btn-primary mt-2">Upload Image</button>
