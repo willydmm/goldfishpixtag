@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signIn, signUp, signInWithGoogle } from './authService';
+import { signIn, signInWithGoogle, signUp } from './authService';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -107,80 +107,111 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="loginForm">
-      <h1>Welcome</h1>
-      <h4>{isSignUp ? 'Sign up to create an account' : 'Sign in to your account'}</h4>
-      <form onSubmit={isSignUp ? handleSignUp : handleSignIn}>
-        <div>
-          <input
-            className="inputText"
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
+    <div>
+      <header data-bs-theme="dark">
+        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
+            alt="GoldFishPixTag"
+            height="60"
+            className="bi me-2"
+            style={{ paddingLeft: '20px', paddingRight: '5px' }}
           />
-          {errors.email && <span className="error">{errors.email}</span>}
+          <p style={{ fontSize: '20px', color: 'white', fontWeight: 'bold' }}>GoldfishPixTag</p>
         </div>
-        <div>
-          <input
-            className="inputText"
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
+      </header>
+
+      <div className="login">
+        <h2>Welcome to GoldfishPixTag!</h2>
+        <img
+            src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
+            alt="GoldFishPixTag"
+            height="200"
+            className="bi me-2"
+            style={{ paddingLeft: '20px', paddingRight: '5px' }}
           />
-          {errors.password && <span className="error">{errors.password}</span>}
+        <div className="spacer"></div>
+        <h4>{isSignUp ? 'Sign up to create an account' : 'Sign in to your account'}</h4>
+        <div className="spacer"></div>
+        <form className="loginForm" onSubmit={isSignUp ? handleSignUp : handleSignIn}>
+          <div>
+            <input
+              className="inputText"
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+            />
+            {errors.email && <span className="error">{errors.email}</span>}
+          </div>
+          <div className="spacer"></div>
+          <div>
+            <input
+              className="inputText"
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+            />
+            {errors.password && <span className="error">{errors.password}</span>}
+          </div>
+          {isSignUp && (
+            <>
+              <div>
+                <input
+                  className="inputText"
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm Password"
+                  required
+                />
+                {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
+              </div>
+              <div>
+                <input
+                  className="inputText"
+                  id="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First Name"
+                  required
+                />
+                {errors.firstName && <span className="error">{errors.firstName}</span>}
+              </div>
+              <div>
+                <input
+                  className="inputText"
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last Name"
+                  required
+                />
+                {errors.lastName && <span className="error">{errors.lastName}</span>}
+              </div>
+            </>
+          )}
+          <button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
+        </form>
+        <button onClick={() => setIsSignUp(!isSignUp)}>
+          {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+        </button>
+        <button onClick={signInWithGoogle}>Sign In with Google</button>
+      </div>
+      <footer className="text-muted py-5">
+        <div className="container">
+          <p className="mb-1">@2024 GoldFishes</p>
         </div>
-        {isSignUp && (
-          <>
-            <div>
-              <input
-                className="inputText"
-                id="confirmPassword"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm Password"
-                required
-              />
-              {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
-            </div>
-            <div>
-              <input
-                className="inputText"
-                id="firstName"
-                type="text"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="First Name"
-                required
-              />
-              {errors.firstName && <span className="error">{errors.firstName}</span>}
-            </div>
-            <div>
-              <input
-                className="inputText"
-                id="lastName"
-                type="text"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Last Name"
-                required
-              />
-              {errors.lastName && <span className="error">{errors.lastName}</span>}
-            </div>
-          </>
-        )}
-        <button type="submit">{isSignUp ? 'Sign Up' : 'Sign In'}</button>
-      </form>
-      <button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
-      </button>
-      <button onClick={signInWithGoogle}>Sign In with Google</button>
+      </footer>
     </div>
   );
 };

@@ -43,15 +43,15 @@ const DeletePage = () => {
     };
 
     return (
-        <div>
-            <h1>Delete Images</h1>
+        <div className='topic'>
+            <h3>Delete Images</h3>
             <textarea
                 value={inputValue}
                 onChange={handleInputChange}
                 placeholder="Enter image URLs separated by new lines"
                 rows={5}
-                style={{ width: '100%' }}
             />
+            <div></div>
             <button onClick={handleAddThumbnails}>Load Thumbnails</button>
             <div className="image-gallery">
                 {thumbnailUrls.map((url, index) => (

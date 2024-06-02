@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     <p style={{ fontSize: '20px', color: 'white', fontWeight: 'bold'}}>GoldfishPixTag</p>
 
                     <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style={{marginLeft: 20}}>
-                        <li><Link to="/" className="nav-link px-2 text-secondary">Home</Link></li>
+                        <li><Link to="/" className="nav-link px-2 text-white">Home</Link></li>
                         <li><Link to="/viewallimages" className="nav-link px-2 text-white">MyGallery</Link></li>
                         <li><Link to="/delete" className="nav-link px-2 text-white">DeleteImages</Link></li>
                         <li><Link to="/faqs" className="nav-link px-2 text-white">FAQs</Link></li>

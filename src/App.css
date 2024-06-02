@@ -22,3 +22,35 @@ button {
 header {
   background-color:RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
 }
+
+.login{
+  margin-top: 5rem;
+}
+
+.loginForm{
+  max-width: 200px;
+  inset: 0;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+  
+}
+
+.spacer{
+  margin-top: 20px;
+}
+
+textarea {
+  margin-top: 2rem;
+  width: 30rem;
+}
+
+.topic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center; 
+  margin-top: 5rem;
+}
