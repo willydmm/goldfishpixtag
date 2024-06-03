@@ -76,6 +76,7 @@
       navigate('/login');
     };
   
+    /*
     const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
   
@@ -114,6 +115,7 @@
         alert('An error occurred while searching for images.');
       }
     };
+    */
   
     const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -179,6 +181,7 @@
     return (
       <div id="homepage">
         {userInfo && <h1>Welcome, {userInfo.given_name}</h1>}
+        {/*
         <form onSubmit={handleSearch} className="mb-3">
           <div className="input-group mb-3">
             <input
@@ -205,6 +208,7 @@
         ) : (
           <p>No search results found.</p>
         )}
+      */}
         <form onSubmit={handleUpload}>
           <div className="mb-3">
             <label htmlFor="fileToUpload" className="form-label">Upload an image</label>
