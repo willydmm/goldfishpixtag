@@ -20,23 +20,43 @@ button {
 }
 
 header {
-  background-color:RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
+  background-color: RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
 }
 
-.login{
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
+}
+
+
+.login {
   margin-top: 5rem;
 }
 
-.loginForm{
+.loginForm {
   max-width: 200px;
   inset: 0;
   width: fit-content;
   height: fit-content;
   margin: auto;
-  
+
 }
 
-.spacer{
+.spacer {
   margin-top: 20px;
 }
 
@@ -51,6 +71,24 @@ textarea {
   align-items: center;
   justify-content: center;
   height: 100%;
-  text-align: center; 
+  text-align: center;
   margin-top: 5rem;
+}
+
+
+.image-viewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.centered-image {
+  max-width: 95%;
+  max-height: 90vh;
+  margin-bottom: 20px;
+  object-fit: contain;
 }

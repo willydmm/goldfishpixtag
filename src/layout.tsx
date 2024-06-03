@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 interface LayoutProps {
     children: ReactNode;
 }
-    
+
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     const navigate = useNavigate();
@@ -20,17 +20,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <Link to="/" className="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                         <img
-                            src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png" 
-                            alt="GoldFishPixTag" 
+                            src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
+                            alt="GoldFishPixTag"
                             height="60"
                             className="bi me-2"
-                            style={{ paddingLeft: '20px' , paddingRight: '5px'}}
+                            style={{ paddingLeft: '20px', paddingRight: '5px' }}
                         />
                     </Link>
 
-                    <p style={{ fontSize: '20px', color: 'white', fontWeight: 'bold'}}>GoldfishPixTag</p>
+                    <p style={{ fontSize: '20px', color: 'white', fontWeight: 'bold' }}>GoldfishPixTag</p>
 
-                    <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style={{marginLeft: 20}}>
+                    <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style={{ marginLeft: 20 }}>
                         <li><Link to="/" className="nav-link px-2 text-white">Home</Link></li>
                         <li><Link to="/viewallimages" className="nav-link px-2 text-white">MyGallery</Link></li>
                         <li><Link to="/delete" className="nav-link px-2 text-white">DeleteImages</Link></li>
@@ -46,14 +46,24 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
             </header>
             <main>{children}</main>
-            <footer className="text-muted py-5">
-                <div className="container">
-                    <p className="float-end mb-1">
+            <footer className="text-muted py-4" data-bs-theme="dark">
+                <div className="container d-flex justify-content-between align-items-center">
+                    <div className="d-inline-flex align-items-center">
+                        <p className="mb-0">@2024 FIT5225 GoldFishes</p>
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
+                            alt="GoldFishPixTag"
+                            height="20"
+                            className="mb-0"
+                            style={{ paddingLeft: '10px'}}
+                        />
+                    </div>
+                    <p className="mb-0 me-3">
                         <Link to="#">Back to top</Link>
                     </p>
-                    <p className="mb-1">@2024 GoldFishes</p>
                 </div>
             </footer>
+
         </div>
     );
 };

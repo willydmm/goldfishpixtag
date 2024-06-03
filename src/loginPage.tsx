@@ -127,7 +127,7 @@ const LoginPage = () => {
         <img
             src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
             alt="GoldFishPixTag"
-            height="200"
+            height="100"
             className="bi me-2"
             style={{ paddingLeft: '20px', paddingRight: '5px' }}
           />
@@ -207,11 +207,7 @@ const LoginPage = () => {
         </button>
         <button onClick={signInWithGoogle}>Sign In with Google</button>
       </div>
-      <footer className="text-muted py-5">
-        <div className="container">
-          <p className="mb-1">@2024 GoldFishes</p>
-        </div>
-      </footer>
+      
     </div>
   );
 };

@@ -4,12 +4,12 @@ import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import GoogleCallbackPage from './GoogleCallBackPage';
+import ViewFullImage from './ViewFullImage.tsx';
 import ConfirmUserPage from './confirmUserPage';
 import DeletePage from './deletePage';
 import HomePage from './homePage';
 import Layout from './layout.tsx';
 import LoginPage from './loginPage';
-import SearchResultsPage from './searchResultsPage.tsx';
 import ViewAllImages from './viewAllImages.tsx';
 
 
@@ -27,9 +27,9 @@ const App: React.FC = () => {
         <Route path="/confirm" element={<ConfirmUserPage />} />
         <Route path="/home" element={isAuthenticated() ? <Layout><HomePage /></Layout> : <Navigate replace to="/login" />} />
         <Route path="/google-callback" element={<GoogleCallbackPage />} />
-        <Route path="/searchresults" element={<Layout><SearchResultsPage /></Layout>} />
         <Route path="/delete" element={<Layout><DeletePage /></Layout>} />
         <Route path="/viewallimages" element={<Layout><ViewAllImages /></Layout>} />
+        <Route path="/viewfullimage" element={<Layout><ViewFullImage /></Layout>} />
       </Routes>
     </BrowserRouter>
   );

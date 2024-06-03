@@ -126,6 +126,7 @@ const HomePage: React.FC = () => {
     };
 
     reader.readAsDataURL(file);
+
   };
 
   const handleDelete = () => {
@@ -136,6 +137,10 @@ const HomePage: React.FC = () => {
     navigate('/viewallimages');
   };
 
+  
+
+
+  
   return (
     <div id="homepage">
       {userInfo && <h1>Welcome, {userInfo.given_name}</h1>}
