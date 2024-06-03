@@ -98,41 +98,45 @@ const ViewAllImagesPage = () => {
 
   const handleSearch = async (event) => {
     event.preventDefault();
-  
+
     try {
-      const idToken = sessionStorage.getItem('idToken');
-      const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
-  
-      const tags = tagsWithCounts.reduce((acc, tagCount) => {
-        const match = tagCount.match(/^(.*)\s(\d+)$/);
-        if (match) {
-          const [, tag, count] = match;
-          acc[tag.trim()] = parseInt(count, 10);
+        const idToken = sessionStorage.getItem('idToken');
+        const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
+
+        const tags = tagsWithCounts.reduce((acc, tagCount) => {
+            const match = tagCount.match(/^(.*)\s(\d+)$/);
+            if (match) {
+                const [, tag, count] = match;
+                acc[tag.trim()] = parseInt(count, 10);
+            } else {
+                acc[tagCount.trim()] = 1;
+            }
+            return acc;
+        }, {});
+
+        const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({ tags })
+        });
+
+        const result = await response.json();
+        if (result && result.links) {
+            setThumbnails(result.links.map(url => ({ thumbnailUrl: url, tags: [] }))); // Assuming result.links are the URLs
+            console.log('Search Results URLs:', result.links);
         } else {
-          acc[tagCount.trim()] = 1;
+            console.error('Invalid response format:', result);
+            alert('Invalid response from the server.');
         }
-        return acc;
-      }, {});
-  
-      const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`
-        },
-        body: JSON.stringify({ tags })
-      });
-  
-      const result = await response.json();
-      setThumbnails(result.links.map(url => ({ thumbnailUrl: url, tags: [] }))); // Assuming result.links are the URLs
-      console.log('Search Results URLs:', result.links);
     } catch (error) {
-      console.error('Error during search:', error);
-      alert('An error occurred while searching for images.');
+        console.error('Error during search:', error);
+        alert('An error occurred while searching for images.');
     }
   };
   
-
   return (
     <div>
       <main>
