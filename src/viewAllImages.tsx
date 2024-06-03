@@ -35,7 +35,6 @@ const ViewAllImagesPage: React.FC = () => {
         }
     }, [navigate]);
 
-
     // Query by tags
     const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -53,7 +52,6 @@ const ViewAllImagesPage: React.FC = () => {
               } else {
                   acc[tagCount.trim()] = 1;
               }
-              console.log(acc);
               return acc;
           }, {});
   
@@ -65,7 +63,6 @@ const ViewAllImagesPage: React.FC = () => {
               },
               body: JSON.stringify({ tags })
           });
-          console.log(idToken)
   
           const result = await response.json();
           console.log("search response", result)
@@ -76,12 +73,12 @@ const ViewAllImagesPage: React.FC = () => {
                   return {
                       thumbnailUrl: link,
                       presignedUrl,
-                      tags: JSON.parse(result.tags[index])
+                      tags: JSON.parse(result.tags[index])  // Parsing tags from the response
                   };
               }));
   
               setSearchResults(searchResultsWithPresignedUrls);
-              console.log("search result", searchResults)
+              console.log("search result", searchResultsWithPresignedUrls)
           } else {
               setSearchResults([]);  // No images found
               console.log("No images found")
@@ -92,8 +89,8 @@ const ViewAllImagesPage: React.FC = () => {
       } finally {
           setIsLoading(false);
       }
-    };  
-
+   };
+    
     // Upload image 
     const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
