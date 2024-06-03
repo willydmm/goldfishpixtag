@@ -1,18 +1,53 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface LayoutProps {
     children: ReactNode;
 }
 
-
 const Layout: React.FC<LayoutProps> = ({ children }) => {
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+    const [tags, setTags] = useState('');
+
+    const getUsernameFromToken = () => {
+        const token = sessionStorage.getItem('idToken');
+        if (token) {
+            const base64Url = token.split('.')[1]; // Get the payload part
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload)['cognito:username']; // Adjust based on the actual key where username is stored
+        }
+        return null;
+    };
+    const userId = getUsernameFromToken();
 
     const handleLogout = () => {
         sessionStorage.clear();
         navigate('/login');
     };
+
+    const handleAddTags = async () => {
+        const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/add_tag_preference', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ user_id: userId, tags: tags })
+        });
+        
+        if (response.ok) {
+            alert('Tags added successfully! Email will be sent when a new image is uploaded');
+        } else {
+            alert('Failed to update tags');
+        }
+
+        setShowModal(false);
+    };
+
 
     return (
         <div>
@@ -34,18 +69,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                         <li><Link to="/" className="nav-link px-2 text-white">Home</Link></li>
                         <li><Link to="/viewallimages" className="nav-link px-2 text-white">MyGallery</Link></li>
                         <li><Link to="/delete" className="nav-link px-2 text-white">DeleteImages</Link></li>
-                        <li><Link to="/faqs" className="nav-link px-2 text-white">FAQs</Link></li>
-                        <li><Link to="/about" className="nav-link px-2 text-white">About</Link></li>
                     </ul>
 
-
                     <div className="text-end">
-                        <button type="button" className="btn btn-outline-light me-2">Me</button>
-                        <button onClick={handleLogout} type="button" className="btn btn-warning">LogOut</button>
+                        <button type="button" className="btn btn-outline-light me-4" onClick={() => setShowModal(true)}>Notification</button>
+                        <button onClick={handleLogout} type="button" className="btn btn-warning me-3">LogOut</button>
                     </div>
                 </div>
             </header>
             <main>{children}</main>
+            {/* Modal for Tag Preferences */}
+            {showModal && (
+                <div className="modal">
+                <div className="modal-content">
+                    <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+                    <h4>Add Tags to Receive Notification</h4>
+                    <input
+                        className='taginput'
+                        type="text"
+                        value={tags}
+                        onChange={(e) => setTags(e.target.value)}
+                        placeholder="Enter tags, separated by commas"
+                    />
+                    <button className='btn btn primary' onClick={handleAddTags}>Save</button>
+                </div>
+            </div>
+            )}
             <footer className="text-muted py-4" data-bs-theme="dark">
                 <div className="container d-flex justify-content-between align-items-center">
                     <div className="d-inline-flex align-items-center">
@@ -63,7 +112,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </p>
                 </div>
             </footer>
-
         </div>
     );
 };

@@ -15,23 +15,40 @@
   width: 100%
 }
 
-button {
-  margin: 0.5em;
+.text-end {
+  margin-right: 30px;
 }
 
 header {
   background-color: RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
 }
 
-html,
-body {
+html, body {
   height: 100%;
   margin: 0;
 }
 
 body {
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('assets/wall.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.5;  /* Adjust the opacity as needed */
+  z-index: -1;
+  background-attachment:fixed;
 }
 
 footer {
@@ -91,4 +108,98 @@ textarea {
   max-height: 90vh;
   margin-bottom: 20px;
   object-fit: contain;
+}
+
+.card-img-top {
+  position: relative;
+}
+
+.checkbox-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.image-checkbox {
+  opacity: 0.8;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-left: 5px;
+}
+
+.select-all {
+  margin-right: 20px;
+}
+
+.select-all-checkbox {
+  transform: scale(1.5);
+  margin-right: 5px;
+}
+
+.gallery{
+  margin-bottom: 2rem !important;
+  
+}
+
+.images{
+  display: flex;
+  align-items: center;
+}
+
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 50px;
+  border-radius: 5px;
+  width: 500px;
+  height: 300px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.close {
+  font-size: xx-large;
+  position: absolute;
+  top: 5px;
+  right: 30px;
+  cursor: pointer;
+}
+
+.taginput{
+  height: 80px;
+  width: 400px;
+  align-items: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.col{
+  width: 400px;
+  margin: 10px;
+}
+
+.image-card{
+  padding: 10px;
+  background-color:#E8E8E8;
 }
