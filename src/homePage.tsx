@@ -296,18 +296,20 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/addtag', {
+            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
                 },
                 body: JSON.stringify({
-                    thumbnails: selectedUrls,
+                    url: selectedUrls,
+                    // 1 for add
+                    type: 1,  
                     tags: tagsToAdd
                 })
             });
-            
+    
             if (!response.ok) throw new Error('Failed to add tags');
     
             const result = await response.json();
@@ -324,36 +326,39 @@ const HomePage: React.FC = () => {
             alert(`Error: ${error.message}`);
         }
     };
+    
 
-    const handleDeleteTag = async (urls) => {
-        const tagsToDelete = tagInput.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+    const handleDeleteTag = async () => {
+        const tagsToRemove = tagInput.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
         const selectedUrls = Object.keys(selectedImages).filter(url => selectedImages[url]);
     
-        console.log('Adding tags', tagsToDelete, 'to images', selectedUrls);
+        console.log('Removing tags', tagsToRemove, 'from images', selectedUrls);
     
-        if (tagsToDelete.length === 0 || selectedUrls.length === 0) {
-            alert('Please select images and enter tags to delete.');
+        if (tagsToRemove.length === 0 || selectedUrls.length === 0) {
+            alert('Please select images and enter tags to remove.');
             return;
         }
     
         try {
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/deletetag', {
+            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
                 },
                 body: JSON.stringify({
-                    thumbnails: selectedUrls,
-                    tags: tagsToDelete
+                    url: selectedUrls,
+                    // 0 for remove
+                    type: 0,  
+                    tags: tagsToRemove
                 })
             });
-            
-            if (!response.ok) throw new Error('Failed to add tags');
+    
+            if (!response.ok) throw new Error('Failed to remove tags');
     
             const result = await response.json();
-            alert(`Tags deleted successfully for ${selectedUrls.length} images!`);
-            console.log(result); 
+            alert('Tags removed successfully!');
+            console.log(result); // Optionally log or process result
     
             // Clear selections and close modal
             setTagInput('');
@@ -361,10 +366,11 @@ const HomePage: React.FC = () => {
             setShowAddTagModal(false);
     
         } catch (error) {
-            console.error('Error deleting tags:', error);
+            console.error('Error removing tags:', error);
             alert(`Error: ${error.message}`);
         }
     };
+    
 
     const handleBatchDelete = async (urls) => {
         const thumbnailUrls = Object.keys(selectedImages).filter(url => selectedImages[url]);
