@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './App.css';
 import GoogleCallbackPage from './GoogleCallBackPage';
-import HomePage from './HomePage.tsx';
+import HomePage from './homePage.tsx';
 import QueryByImagePage from './QueryByImagePage.tsx';
 import ConfirmUserPage from './confirmUserPage';
 import DeletePage from './deletePage';
