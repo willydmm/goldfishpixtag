@@ -10,6 +10,7 @@ import ConfirmUserPage from './confirmUserPage';
 import DeletePage from './deletePage';
 import Layout from './layout.tsx';
 import LoginPage from './loginPage';
+import ViewFullImage from './ViewFullImage.tsx';
 
 
 const App: React.FC = () => {
@@ -28,6 +29,7 @@ const App: React.FC = () => {
         <Route path="/google-callback" element={<GoogleCallbackPage />} />
         <Route path="/delete" element={<Layout><DeletePage /></Layout>} />
         <Route path="/querybyimage" element={<Layout><QueryByImagePage /></Layout>} />
+        <Route path="/viewfullimage" element={<Layout><ViewFullImage /></Layout>} />
       </Routes>
     </BrowserRouter>
   );
