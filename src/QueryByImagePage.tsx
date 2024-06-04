@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -10,6 +10,23 @@ const QueryByImagePage = () => {
     const [imageResults, setImageResults] = useState([]);
     const [copied, setCopied] = useState(false);
     const [copiedIndex, setCopiedIndex] = useState(null);
+
+    // Fetch username to display only images of current user
+    const getUsernameFromToken = () => {
+        const token = sessionStorage.getItem('idToken');
+        if (token) {
+            const base64Url = token.split('.')[1]; // Get the payload part
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload)['cognito:username']; // Adjust based on the actual key where username is stored
+        }
+        return null;
+    };
+
+    const userName = getUsernameFromToken();
 
     const handleImageChange = (event) => {
         setImageFile(event.target.files[0]);
@@ -45,7 +62,8 @@ const QueryByImagePage = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/octet-stream',
-                        'Authorization': `Bearer ${idToken}` // Add authorization token
+                        'Authorization': `Bearer ${idToken}`,
+                        'UserId': userName // Add authorization token
                     },
                     body: base64Content
                 });
@@ -81,6 +99,8 @@ const QueryByImagePage = () => {
     
         reader.readAsDataURL(file);
     };
+
+    
 
 
     const handleCopy = (index) => {

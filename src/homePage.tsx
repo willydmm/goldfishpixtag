@@ -217,7 +217,7 @@ const HomePage: React.FC = () => {
                     const thumbnailsWithPresignedUrls = await Promise.all(parsedBody.images.map(async (image) => {
                         const presignedUrl = await getPresignedUrl(image.thumbnailUrl);
                         return {
-                            ...image,  // Original propert8ies
+                            ...image,  // Original properties
                             presignedUrl  // Add the new presigned URL
                         };
                     }));
@@ -522,7 +522,7 @@ const HomePage: React.FC = () => {
                 <div className="modal">
                     <div className="modal-content">
                         <span className="close" onClick={() => setShowDeleteTagModal(false)}>&times;</span>
-                        <h4>Add Tags to Images</h4>
+                        <h4>Delete Tags from Images</h4>
                         <input
                             className='taginput'
                             type="text"
