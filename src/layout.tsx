@@ -50,7 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
 
     return (
-        <div>
+        <div className="d-flex flex-column min-vh-100">
             <header data-bs-theme="dark">
                 <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                     <Link to="/" className="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -67,8 +67,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
                     <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style={{ marginLeft: 20 }}>
                         <li><Link to="/" className="nav-link px-2 text-white">Home</Link></li>
-                        <li><Link to="/viewallimages" className="nav-link px-2 text-white">MyGallery</Link></li>
-                        <li><Link to="/delete" className="nav-link px-2 text-white">DeleteImages</Link></li>
                     </ul>
 
                     <div className="text-end">
@@ -77,23 +75,23 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </div>
                 </div>
             </header>
-            <main>{children}</main>
+            <main className="flex-grow-1">{children}</main>
             {/* Modal for Tag Preferences */}
             {showModal && (
                 <div className="modal">
-                <div className="modal-content">
-                    <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-                    <h4>Add Tags to Receive Notification</h4>
-                    <input
-                        className='taginput'
-                        type="text"
-                        value={tags}
-                        onChange={(e) => setTags(e.target.value)}
-                        placeholder="Enter tags, separated by commas"
-                    />
-                    <button className='btn btn primary' onClick={handleAddTags}>Save</button>
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setShowModal(false)}>&times;</span>
+                        <h4>Add Tags to Receive Notification</h4>
+                        <input
+                            className='taginput'
+                            type="text"
+                            value={tags}
+                            onChange={(e) => setTags(e.target.value)}
+                            placeholder="Enter tags, separated by commas"
+                        />
+                        <button className='btn btn-primary' onClick={handleAddTags}>Save</button>
+                    </div>
                 </div>
-            </div>
             )}
             <footer className="text-muted py-4" data-bs-theme="dark">
                 <div className="container d-flex justify-content-between align-items-center">
