@@ -4,58 +4,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 
-const handleUpload = async (event: React.FormEvent<HTMLFormElement>, callback: any) => {
-    event.preventDefault();
-
-    const fileInput = document.getElementById('fileToUpload') as HTMLInputElement;
-    if (!fileInput.files?.length) {
-        alert('Please select a file to upload.');
-        return;
-    }
-
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-
-    reader.onload = async function () {
-        if (typeof reader.result !== 'string') {
-            console.error('Error: FileReader result is not a string.');
-            alert('An error occurred while reading the file.');
-            return;
-        }
-
-        console.log('File read successfully.');
-        console.log('Sending request to API Gateway...');
-
-        try {
-            const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
-            const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
-
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_image', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/octet-stream',
-                    'Authorization': `Bearer ${idToken}`, // Add authorization token
-                    
-                },
-                body: base64Content
-            });
-            const result = await response.json();
-            console.log('Received response from API Gateway.', result);
-            callback && callback(result)
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while uploading the image.');
-        }
-    };
-
-    reader.onerror = function () {
-        console.error('Error reading file:', reader.error);
-        alert('Failed to read file.');
-    };
-
-    reader.readAsDataURL(file);
-};
-
 const QueryByImagePage = () => {
     const navigate = useNavigate();
     const [imageFile, setImageFile] = useState(null);
@@ -186,7 +134,7 @@ const QueryByImagePage = () => {
                         <h2>Search for Similar Images</h2>
                     </div>
                     <div className='spacer'></div>
-                    <form onSubmit={(e) => handleUpload(e, setImageResults)} className="mb-3 ml-5">
+                    <form onSubmit={handleSubmitImage} className="mb-3 ml-5">
                         <div className="input-group mb-3">
                             <input type="file" accept="image/*" name="fileToUpload" id="fileToUpload"className="form-control" />
                             <button type="submit" className="btn btn-primary mt-2 mr-5">Search</button>
