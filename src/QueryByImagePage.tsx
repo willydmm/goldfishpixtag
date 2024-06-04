@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
+
 
 const handleUpload = async (event: React.FormEvent<HTMLFormElement>, callback: any) => {
     event.preventDefault();
@@ -64,31 +67,73 @@ const QueryByImagePage = () => {
         setImageFile(event.target.files[0]);
     };
 
-    // const handleSubmitImage = async (event) => {
-    //     event.preventDefault();
-    //     if (!imageFile) {
-    //         alert('Please select an image to upload.');
-    //         return;
-    //     }
+    const handleSubmitImage = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    
+        const fileInput = document.getElementById('fileToUpload') as HTMLInputElement;
+        if (!fileInput.files?.length) {
+            alert('Please select a file to upload.');
+            return;
+        }
+    
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+    
+        reader.onload = async function () {
+            if (typeof reader.result !== 'string') {
+                console.error('Error: FileReader result is not a string.');
+                alert('An error occurred while reading the file.');
+                return;
+            }
+    
+            console.log('File read successfully.');
+            console.log('Sending request to API Gateway...');
+    
+            try {
+                const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
+                const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
+    
+                const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/octet-stream',
+                        'Authorization': `Bearer ${idToken}` // Add authorization token
+                    },
+                    body: base64Content
+                });
+                const result = await response.json();
+                console.log('Received response from API Gateway.', result);
 
-    //     const formData = new FormData();
-    //     formData.append('image', imageFile);
+                if (result.links) {
+                    const searchResultsWithPresignedUrls = await Promise.all(result.links.map(async (link, index) => {
+                        const presignedUrl = await getPresignedUrl(link);
+                        return {
+                            thumbnailUrl: link,
+                            presignedUrl,
+                            tags: JSON.parse(result.tags[index])  // Parsing tags from the response
+                        };
+                    }));
+        
+                    setImageResults(searchResultsWithPresignedUrls);
+                    console.log("search result", searchResultsWithPresignedUrls)
+                } else {
+                    setImageResults([]);  // No images found
+                    console.log("No images found")
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while uploading the image.');
+            }
+        };
+    
+        reader.onerror = function () {
+            console.error('Error reading file:', reader.error);
+            alert('Failed to read file.');
+        };
+    
+        reader.readAsDataURL(file);
+    };
 
-    //     try {
-    //         const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_image', {
-    //             method: 'POST',
-    //             body: formData,
-    //         });
-
-    //         if (!response.ok) throw new Error('Failed to fetch');
-
-    //         const result = await response.json();
-    //         setImageResults(result.images); // Assuming the API returns an array of image URLs
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //         alert('Failed to upload image.');
-    //     }
-    // };
 
     const handleCopy = (index) => {
         setCopied(true);
@@ -144,7 +189,7 @@ const QueryByImagePage = () => {
                     <form onSubmit={(e) => handleUpload(e, setImageResults)} className="mb-3 ml-5">
                         <div className="input-group mb-3">
                             <input type="file" accept="image/*" name="fileToUpload" id="fileToUpload"className="form-control" />
-                            <button type="submit" className="btn btn-primary mt-2 mr-5">Upload</button>
+                            <button type="submit" className="btn btn-primary mt-2 mr-5">Search</button>
                         </div>
                     </form>
                 </div>
@@ -155,26 +200,34 @@ const QueryByImagePage = () => {
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 images">
                     {Array.isArray(imageResults) && imageResults.length > 0 ? (
                         imageResults.map((image, index) => (
-                            <img src={image} width={400} key={index} />
-                            // <div key={index} className="col image-card">
-                            //     <div className="card shadow-sm">
-                            //         <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
-                            //     </div>
-                            //     <div className="card-body">
-                            //         <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
-                            //         <div className="d-flex justify-content-between align-items-center">
-                            //             <div className="btn-group">
-                            //                 <button type="button" className="btn btn-secondary" onClick={() => handleCopy(index)}>
-                            //                     Copy URL
-                            //                 </button>
-                            //                 <button type="button" className="btn btn-secondary" onClick={() => handleViewImage(image.thumbnailUrl)}>
-                            //                     View Image
-                            //                 </button>
-                            //             </div>
-                            //             {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
-                            //         </div>
-                            //     </div>
-                            // </div>
+                            <div key={index} className="col image-card">
+                                <div className="card shadow-sm">
+                                    <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
+                                </div>
+                                <div className="card-body">
+                                    <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="btn-group">
+                                            <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
+                                                <button type="button" className="btn btn-secondary">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
+                                                        <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                                        <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                                    </svg>
+                                                </button>
+                                            </CopyToClipboard>
+                                            {/* View full image button */}
+                                            <button type="button" className="btn btn-secondary" onClick={() => handleViewImage(image.thumbnailUrl)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
+                                    </div>
+                                </div>
+                            </div>
                         ))
                     ) : (
                         <p>No similar images found.</p>
