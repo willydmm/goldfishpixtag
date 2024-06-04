@@ -35,65 +35,62 @@ const ViewAllImagesPage: React.FC = () => {
         }
     }, [navigate]);
 
-
     // Query by tags
     const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setIsLoading(true);
-
-        try {
-            const idToken = sessionStorage.getItem('idToken');
-            const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
-
-            const tags = tagsWithCounts.reduce((acc, tagCount) => {
-                const match = tagCount.match(/^(.*)\s(\d+)$/);
-                if (match) {
-                    const [, tag, count] = match;
-                    acc[tag.trim()] = parseInt(count, 10);
-                } else {
-                    acc[tagCount.trim()] = 1;
-                }
-                console.log(acc);
-                return acc;
-            }, {});
-
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`
-                },
-                body: JSON.stringify({ tags })
-            });
-            console.log(idToken)
-
-            const result = await response.json();
-            console.log("search response", result)
-
-            if (result.images) {
-                const searchResultsWithPresignedUrls = await Promise.all(result.images.map(async image => {
-                    const presignedUrl = await getPresignedUrl(image.thumbnailUrl);
-                    return {
-                        ...image,
-                        presignedUrl,
-                        tags: JSON.parse(image.tags)  // Parsing the tags string into an array
-                    };
-                }));
+      event.preventDefault();
+      setIsLoading(true);
+  
+      try {
+          const idToken = sessionStorage.getItem('idToken');
+          const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
+  
+          const tags = tagsWithCounts.reduce((acc, tagCount) => {
+              const match = tagCount.match(/^(.*)\s(\d+)$/);
+              if (match) {
+                  const [, tag, count] = match;
+                  acc[tag.trim()] = parseInt(count, 10);
+              } else {
+                  acc[tagCount.trim()] = 1;
+              }
+              return acc;
+          }, {});
+  
+          const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${idToken}`
+              },
+              body: JSON.stringify({ tags })
+          });
+  
+          const result = await response.json();
+          console.log("search response", result)
+  
+          if (result.links) {
+              const searchResultsWithPresignedUrls = await Promise.all(result.links.map(async (link, index) => {
+                  const presignedUrl = await getPresignedUrl(link);
+                  return {
+                      thumbnailUrl: link,
+                      presignedUrl,
+                      tags: JSON.parse(result.tags[index])  // Parsing tags from the response
+                  };
+              }));
+  
+              setSearchResults(searchResultsWithPresignedUrls);
+              console.log("search result", searchResultsWithPresignedUrls)
+          } else {
+              setSearchResults([]);  // No images found
+              console.log("No images found")
+          }
+      } catch (error) {
+          console.error('Error during search:', error);
+          alert('An error occurred while searching for images.');
+      } finally {
+          setIsLoading(false);
+      }
+   };
     
-                setSearchResults(searchResultsWithPresignedUrls);
-                console.log("search result", searchResults)
-            } else {
-                setSearchResults([]);  // No images found
-                console.log("failed")
-            }
-
-
-        } catch (error) {
-            console.error('Error during search:', error);
-            alert('An error occurred while searching for images.');
-        }
-    };
-
     // Upload image 
     const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
