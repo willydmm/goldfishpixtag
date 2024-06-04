@@ -24,15 +24,15 @@ a:hover {
   color: #535bf2;
 }
 
-p{
+p {
   margin: 0;
 }
 
 body {
   margin: 0;
   display: flex;
-  place-items: center;
-  min-width: 320px;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 h1 {
@@ -64,7 +64,6 @@ button:focus-visible {
   height: 225px;
 }
 
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -76,4 +75,18 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+footer {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
 }
