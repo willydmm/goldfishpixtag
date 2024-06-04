@@ -6,21 +6,22 @@
   min-width: 18em
 }
 
-.smallButton {
-  font-size: 0.8em;
-}
-
 .inputText {
-  font-size: 1.3em;
+  font-family: arial, sans-serif;
+  font-size: 1rem;
   width: 100%
 }
-
+x
 .text-end {
   margin-right: 30px;
 }
 
 header {
   background-color: RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
+  font-family: arial, sans-serif;
+  padding-left: 5px;
+  padding-right: 10px;
+
 }
 
 html, body {
@@ -29,6 +30,7 @@ html, body {
 }
 
 body {
+  font-family: arial, sans-serif;
   min-height: 100vh;
   position: relative;
   z-index: 1;
@@ -59,15 +61,19 @@ footer {
   background-color: RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1)) !important;
 }
 
+h2{
+  font-weight: bold;
+  font-style: italic;
+}
+
 
 .login {
   margin-top: 5rem;
 }
 
 .loginForm {
-  max-width: 200px;
+  max-width: 250px;
   inset: 0;
-  width: fit-content;
   height: fit-content;
   margin: auto;
 
@@ -131,7 +137,7 @@ textarea {
   display: flex;
   align-items: center;
   margin-bottom: 30px;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 
 .select-all {
@@ -200,6 +206,22 @@ textarea {
 }
 
 .image-card{
-  padding: 10px;
+  padding: 20px;
   background-color:#E8E8E8;
+}
+
+.nav-link{
+  margin-left: 10px;
+}
+
+.nav-link:hover{
+  color: lightgray;
+}
+
+.upload{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 65rem;
 }

@@ -100,8 +100,6 @@ const QueryByImagePage = () => {
         reader.readAsDataURL(file);
     };
 
-    
-
 
     const handleCopy = (index) => {
         setCopied(true);
@@ -148,19 +146,20 @@ const QueryByImagePage = () => {
 
     return (
         <div>
-            <section className="py-5 px-5 text-center container">
-                <div className="row py-lg-5">
+            <section className="py-3 px-5 text-center container">
+                <div className="row py-lg-5 px-5">
                     <div className="col-lg-4 col-md-4 mx-auto">
                         <h2>Search for Similar Images</h2>
                     </div>
                     <div className='spacer'></div>
-                    <form onSubmit={handleSubmitImage} className="mb-3 ml-5">
+                    {/* upload */}
+                    <form onSubmit={handleSubmitImage} className="upload mb-3">
                         <div className="input-group mb-3">
-                            <input type="file" accept="image/*" name="fileToUpload" id="fileToUpload"className="form-control" />
-                            <button type="submit" className="btn btn-primary mt-2 mr-5">Search</button>
+                            <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" className="form-control" />
+                            <button type="submit" className="btn btn-primary">Upload</button>
                         </div>
                     </form>
-                </div>
+                    </div>
             </section>
 
             <div className="album py-3" style={{ marginBottom: '100px' }}>

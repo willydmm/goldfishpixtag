@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
             setIsLoading(false);
         }
     };
-    
+
     // Upload image 
     const handleUpload = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -191,7 +191,7 @@ const HomePage: React.FC = () => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
 
-            return JSON.parse(jsonPayload)['cognito:username']; // Adjust based on the actual key where username is stored
+            return JSON.parse(jsonPayload)['cognito:username']; 
         }
         return null;
     };
@@ -246,7 +246,7 @@ const HomePage: React.FC = () => {
         }, 2000);
     };
 
-
+    // View original image 
     const handleViewImage = async (thumbnailUrl) => {
         // Parse thumbnail url to image url 
         console.log(thumbnailUrl)
@@ -404,21 +404,21 @@ const HomePage: React.FC = () => {
     return (
         <div>
             <main>
-                <section className="py-5 px-5 text-center container">
-                    <div className="row py-lg-5">
+                <section className="py-3 px-5 text-center container">
+                    <div className="row py-lg-5 px-5">
                         <div className="col-lg-4 col-md-4 mx-auto">
                             {userInfo && <h2>Welcome, {userInfo.given_name}</h2>}
                         </div>
                         <div className='spacer'></div>
                         {/* upload */}
-                        <form onSubmit={handleUpload} className="mb-3">
+                        <form onSubmit={handleUpload} className="upload mb-3">
                             <div className="input-group mb-3">
                                 <input type="file" name="fileToUpload" id="fileToUpload" className="form-control" />
-                                <button type="submit" className="btn btn-primary mt-2">Upload</button>
+                                <button type="submit" className="btn btn-primary">Upload</button>
                             </div>
                         </form>
                         {/* search */}
-                        <form onSubmit={handleSearch} className="mb-3">
+                        {/* <form onSubmit={handleSearch} className="mb-3">
                             <div className="input-group mb-3">
                                 <input
                                     type="text"
@@ -427,12 +427,12 @@ const HomePage: React.FC = () => {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                 />
-                                <button className="btn btn-primary mt-2" type="submit">Search</button>
+                                <button className="btn btn-primary" type="submit">Search</button>
                             </div>
-                        </form>
-                        <div className="btn-group" role="group" aria-label="Basic example">
-                            <button onClick={handleQueryByImage} className="btn btn-secondary">Find Similar Image</button>
-                            <button onClick={handleDeleteByUrl} className="btn btn-danger">Delete Images by Url</button>
+                        </form> */}
+                        <div >
+                            <button onClick={handleQueryByImage} className="btn btn-secondary mx-5">Find Similar Image</button>
+                            <button onClick={handleDeleteByUrl} className="btn btn-secondary mx-5">Delete Images by Url</button>
                         </div>
                     </div>
                 </section>
@@ -453,52 +453,131 @@ const HomePage: React.FC = () => {
                             />
                             <label htmlFor="select-all">Select All</label>
                         </div>
-                        <button className="btn btn-primary" onClick={() => setShowAddTagModal(true)}>Add Tag</button>
-                        <button className="btn btn-warning" onClick={() => setShowDeleteTagModal(true)}>Delete Tag</button>
-                        <button className="btn btn-danger" onClick={handleBatchDelete}>Delete Images</button>
+                        <div className="btn-group mx-2" role="group">
+                        <button className="btn btn-primary mx-1" onClick={() => setShowAddTagModal(true)}>Add Tag</button>
+                        <button className="btn btn-warning mx-1" onClick={() => setShowDeleteTagModal(true)}>Delete Tag</button>
+                        <button className="btn btn-danger mx-1" onClick={handleBatchDelete}>Delete Images</button>
+                        </div>
+                            <form onSubmit={handleSearch} className="form-inline">
+                            <div className="input-group mx-5">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search for images..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                                <button className="btn btn-outline-primary" type="submit">Search</button>
+                                <button className="btn btn-outline-primary" onClick={() => setSearchQuery("")}>Clear</button>
+                            </div>
+                        </form>
                     </div>
-                        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 images">
-                            {((searchResults.length > 0 ? searchResults : thumbnails).map((image, index) => (
-                                <div key={index} className="col image-card">
-                                    <div className="card shadow-sm">
-                                        <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
-                                        <div className="checkbox-container">
-                                            <input
-                                                type="checkbox"
-                                                checked={isImageSelected(image.thumbnailUrl)}
-                                                onChange={() => toggleImageSelection(image.thumbnailUrl)}
-                                                className="image-checkbox"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="card-body">
-                                        <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <div className="btn-group">
-                                                <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
-                                                    <button type="button" className="btn btn-secondary">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
-                                                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
-                                                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-                                                        </svg>
-                                                    </button>
-                                                </CopyToClipboard>
-                                                {/* View full image button */}
-                                                <button type="button" className="btn btn-secondary" onClick={() => handleViewImage(image.thumbnailUrl)}>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
-                                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
-                                        </div>
-                                    </div>
-                                </div>
-                            )))}
+
+                    {/* Thumbnails or Search Results */}
+    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 images">
+        {searchResults.length > 0 ? (
+            // Display search results if available
+            searchResults.map((image, index) => (
+                <div key={index} className="col image-card">
+                    <div className="card shadow-sm">
+                        <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
+                        <div className="checkbox-container">
+                            <input
+                                type="checkbox"
+                                checked={isImageSelected(image.thumbnailUrl)}
+                                onChange={() => toggleImageSelection(image.thumbnailUrl)}
+                                className="image-checkbox"
+                            />
+                        </div>
+                    </div>
+                    <div className="card-body mt-1">
+                        <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
+                        <div className="d-flex justify-content-between align-items-center mt-2">
+                            <div className="btn-group">
+                                {/* Copy thumbnail url button */}
+                                <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
+                                    <button type="button" className="btn btn-secondary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
+                                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                        </svg>
+                                    </button>
+                                </CopyToClipboard>
+                                {/* View full image button */}
+                                <button type="button" className="btn btn-secondary mx-1" onClick={() => handleViewImage(image.thumbnailUrl)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                    </svg>
+                                </button>
+                            </div>
+                            {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
                         </div>
                     </div>
                 </div>
+            ))
+        ) : searchQuery && searchResults.length === 0 ? (
+            // Display "Not Found" message if search query is present but no results
+            <div className="col text-center">
+                <p>No images found with tag '{searchQuery}'</p>
+            </div>
+        ) : (
+            // Display thumbnails if no search is performed or search query is cleared
+            thumbnails.map((image, index) => (
+                <div key={index} className="col image-card">
+                    <div className="card shadow-sm">
+                        <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
+                        <div className="checkbox-container">
+                            <input
+                                type="checkbox"
+                                checked={isImageSelected(image.thumbnailUrl)}
+                                onChange={() => toggleImageSelection(image.thumbnailUrl)}
+                                className="image-checkbox"
+                            />
+                        </div>
+                    </div>
+                    <div className="card-body mt-1">
+                        <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
+                        <div className="d-flex justify-content-between align-items-center mt-2">
+                            <div className="btn-group">
+                                {/* Copy thumbnail url button */}
+                                <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
+                                    <button type="button" className="btn btn-secondary">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
+                                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                        </svg>
+                                    </button>
+                                </CopyToClipboard>
+                                {/* View full image button */}
+                                <button type="button" className="btn btn-secondary mx-1" onClick={() => handleViewImage(image.thumbnailUrl)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                    </svg>
+                                </button>
+                            </div>
+                            {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
+                        </div>
+                    </div>
+                </div>
+            ))
+        )}
+    </div>
+
+
+                    
+
+
+
+
+
+                    </div>
+                </div>
+
+
+
+
             </main >
             {/* AddTag Modal */}
             {showAddTagModal && (
