@@ -157,10 +157,18 @@ def query_images(tags):
 
     matching_images = []
     for item in items:
-        image_tags = json.loads(item.get('Tags', '[]'))
+        image_tags = json.loads(item.get('Tags'))
         if all(tag in image_tags for tag in tags):
             thumbnail_url = item.get('ThumbnailImageUrl')
             if thumbnail_url:
-                matching_images.append(thumbnail_url)
+                matching_images.append({
+                    "url": thumbnail_url,
+                    "tags": item.get('Tags')
+                })
 
-    return matching_images
+    result = {
+        "links": [image["url"] for image in matching_images],
+        "tags": [image["tags"] for image in matching_images]
+    }
+
+    return result
