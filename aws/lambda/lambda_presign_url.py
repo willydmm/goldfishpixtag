@@ -30,11 +30,11 @@ def lambda_handler(event, context):
                 
                 # Generate a presigned URL for the object
                 presigned_url = s3_client.generate_presigned_url('get_object',
-                                                                 Params={
-                                                                     'Bucket': bucket_name,
-                                                                     'Key': object_key
-                                                                 },
-                                                                 ExpiresIn=60) 
+                                                                Params={
+                                                                'Bucket': bucket_name,
+                                                                'Key': object_key
+                                                                },
+                                                                ExpiresIn=60) 
                 
                 # Add CORS headers to the response
                 headers = {

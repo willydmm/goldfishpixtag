@@ -6,7 +6,7 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     sns = boto3.client('sns')
     tag_pref_table = dynamodb.Table('TagNotification')
-    topic_arn = 'arn:aws:sns:us-east-1:337876985551:ImageTagNotifications'
+    topic_arn = 'arn:aws:sns:us-east-1:885679614792:TagNotification'
     
     for record in event['Records']:
         if record['eventName'] == 'INSERT':
@@ -34,7 +34,15 @@ def lambda_handler(event, context):
                 matched_tags = [tag for tag in tags if tag in user_prefs]
                 if matched_tags:
                     # If there are matching tags, construct and send a notification
-                    message = f"You uploaded an image with your preferred tags ({matched_tags}). Log in to see!"
+                    formatted_tags = ', '.join(matched_tags)
+                    message = f"""
+*** New Image Uploaded ***
+You have uploaded an image with your preferred tag: {formatted_tags}.
+Log in to see your new images!
+                    
+Regards,
+GoldFishPixTag
+                    """
                     sns.publish(
                         TopicArn=topic_arn,
                         Message=message,
