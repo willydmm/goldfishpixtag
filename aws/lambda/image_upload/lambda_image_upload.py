@@ -31,7 +31,7 @@ def lambda_handler(event, context):
                 'headers': {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Headers': 'Content-Type,x-user-id',
-                    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+                    'Access-Control-Allow-Methods': 'OPTIONS,POST'
                 },
                 'body': json.dumps('The uploaded file is not a valid image.')
             }
@@ -71,7 +71,7 @@ def lambda_handler(event, context):
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type,x-user-id',
-                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
             },
             'body': json.dumps(f'An error occurred: {str(e)}')
         }

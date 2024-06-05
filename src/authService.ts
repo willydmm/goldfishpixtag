@@ -81,6 +81,6 @@ export const confirmSignUp = async (username: string, code: string) => {
 };
 
 export const signInWithGoogle = async () => {
-  const cognitoAuthUrl = `https://goldfishpixtag.auth.${config.region}.amazoncognito.com/oauth2/authorize?response_type=token&client_id=${config.clientId}&redirect_uri=${encodeURIComponent(config.redirectUri)}&identity_provider=Google&scope=openid+email+profile`;
+  const cognitoAuthUrl = `https://goldfishpixtag2.auth.${config.region}.amazoncognito.com/oauth2/authorize?response_type=token&client_id=${config.clientId}&redirect_uri=${encodeURIComponent(config.redirectUri)}&identity_provider=Google&scope=openid+email+profile`;
   window.location.href = cognitoAuthUrl;
 };

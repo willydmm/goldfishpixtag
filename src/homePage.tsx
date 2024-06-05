@@ -143,7 +143,7 @@ const HomePage: React.FC = () => {
                 const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
                 const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
 
-                const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/upload', {
+                const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/upload', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/octet-stream',
