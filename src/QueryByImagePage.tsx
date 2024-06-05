@@ -124,7 +124,7 @@ const QueryByImagePage = () => {
 
     const getPresignedUrl = async (imageUrl) => {
         try {
-            const response = await fetch(`https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
+            const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

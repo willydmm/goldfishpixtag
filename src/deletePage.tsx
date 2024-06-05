@@ -27,7 +27,7 @@ const DeletePage = () => {
             return;
         }
         if (window.confirm('Are you sure you want to delete all the displayed images?')) {
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/delete', {
+            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/delete', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
