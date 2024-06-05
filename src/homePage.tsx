@@ -413,7 +413,7 @@ const HomePage: React.FC = () => {
                         {/* upload */}
                         <form onSubmit={handleUpload} className="upload mb-3">
                             <div className="input-group mb-3">
-                                <input type="file" name="fileToUpload" id="fileToUpload" className="form-control" />
+                                <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" className="form-control" />
                                 <button type="submit" className="btn btn-primary">Upload</button>
                             </div>
                         </form>
