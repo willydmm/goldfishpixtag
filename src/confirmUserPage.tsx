@@ -24,12 +24,32 @@ const ConfirmUserPage = () => {
   };
 
 return (
-  <div className="loginForm">
+  <div>
+      <header data-bs-theme="dark">
+        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
+            alt="GoldFishPixTag"
+            height="60"
+            className="bi me-2"
+            style={{ paddingLeft: '20px', paddingRight: '5px' }}
+          />
+          <p style={{ fontSize: '20px', color: 'white', fontWeight: 'bold' }}>GoldfishPixTag</p>
+        </div>
+      </header>
+  <div className="login">
     <h2>Confirm Account</h2>
-    <form onSubmit={handleSubmit}>
+    <img
+          src="https://cdn-icons-png.flaticon.com/512/1717/1717945.png"
+          alt="GoldFishPixTag"
+          height="150"
+          className="bi me-2"
+          style={{ paddingLeft: '20px', paddingRight: '5px' }}
+        />
+    <form className='loginForm' onSubmit={handleSubmit}>
       <div>
         <input
-          className="inputText"
+          className="inputText form-control mb-2"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -39,15 +59,17 @@ return (
       </div>
       <div>
         <input
-          className="inputText"
+          className="inputText form-control mb-2"
           type="text"
           value={confirmationCode}
           onChange={(e) => setConfirmationCode(e.target.value)}
           placeholder="Confirmation Code"
           required />
       </div>
-      <button type="submit">Confirm Account</button>
+      <div className="spacer"></div>
+      <button className="btn btn-primary mt-3" type="submit">Confirm Account</button>
     </form>
+  </div>
   </div>
 );
 

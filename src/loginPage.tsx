@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signIn, signInWithGoogle, signUp, forgotPassword, confirmForgotPassword } from './authService';
+import { confirmForgotPassword, forgotPassword, signIn, signInWithGoogle, signUp } from './authService';
 import './loginPage.css';
 
 const LoginPage = () => {
