@@ -51,7 +51,6 @@ const QueryByImagePage = () => {
                 return;
             }
     
-            console.log('Your user Id:', userName);
             console.log('File read successfully.');
             console.log('Sending request to API Gateway...');
     
