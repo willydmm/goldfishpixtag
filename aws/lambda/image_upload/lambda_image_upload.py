@@ -8,7 +8,6 @@ import mimetypes
 
 s3 = boto3.client('s3')
 BUCKET_NAME = 'goldfishimages'
-DYNAMODB_TABLE = 'UserImage'
 
 def lambda_handler(event, context):
     try:
@@ -44,16 +43,6 @@ def lambda_handler(event, context):
 
         # If the file is an image, upload to S3
         s3.put_object(Bucket=BUCKET_NAME, Key=s3_key, Body=file_content)
-
-        # Save metadata to DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(DYNAMODB_TABLE)
-        table.put_item(
-            Item={
-                'UserId': user_id,
-                'ImageKey': s3_key
-            }
-        )
 
         return {
             'statusCode': 200,
