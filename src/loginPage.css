@@ -1,0 +1,58 @@
+.error {
+    color: red;
+    font-size: 0.875rem; 
+    margin-top: 0.25rem;  
+  }
+  
+  .login {
+    text-align: center;
+  }
+  
+  .login img {
+    margin-bottom: 20px;
+  }
+  
+  .loginForm {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .loginForm .inputText {
+    margin-bottom: 10px;
+  }
+  
+  header {
+    background-color: #343a40;
+    padding: 10px;
+  }
+  
+  header img {
+    padding-left: 20px;
+    padding-right: 5px;
+  }
+  
+  header p {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .validation {
+    list-style-type: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+  }
+  
+  .validation li {
+    font-size: 0.875rem;
+  }
+  
+  .validation li.valid {
+    color: green;
+  }
+  
+  .validation li.invalid {
+    color: red;
+  }
+  

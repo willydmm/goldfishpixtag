@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signIn, signInWithGoogle, signUp, forgotPassword, confirmForgotPassword } from './authService';
+import './loginPage.css';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,14 @@ const LoginPage = () => {
   const [confirmationCode, setConfirmationCode] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [passwordValidation, setPasswordValidation] = useState({
+    length: false,
+    lower: false,
+    upper: false,
+    number: false,
+    special: false,
+  });
+
   const navigate = useNavigate();
 
   const validateEmail = (email: string) => {
@@ -21,8 +30,21 @@ const LoginPage = () => {
   };
 
   const validatePassword = (password: string) => {
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return re.test(password) && password.indexOf(' ') === -1;
+    const length = password.length >= 8;
+    const lower = /[a-z]/.test(password);
+    const upper = /[A-Z]/.test(password);
+    const number = /\d/.test(password);
+    const special = /[@$!%*?&]/.test(password);
+
+    setPasswordValidation({
+      length,
+      lower,
+      upper,
+      number,
+      special,
+    });
+
+    return length && lower && upper && number && special;
   };
 
   const validateName = (name: string) => {
@@ -41,7 +63,7 @@ const LoginPage = () => {
     }
 
     if (!validatePassword(password)) {
-      newErrors.password = 'Password must be at least 8 characters, include 1 uppercase and 1 lowercase letter, 1 numeric character, 1 special character, and no spaces';
+      newErrors.password = 'Invalid password';
       valid = false;
     }
 
@@ -78,7 +100,7 @@ const LoginPage = () => {
     }
 
     if (!validatePassword(password)) {
-      newErrors.password = 'Password must be at least 8 characters, include 1 uppercase and 1 lowercase letter, 1 numeric character, 1 special character, and no spaces';
+      newErrors.password = 'Password must meet all the requirements';
       valid = false;
     }
 
@@ -107,6 +129,12 @@ const LoginPage = () => {
         alert(`Sign up failed: ${error}`);
       }
     }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setPassword(value);
+    validatePassword(value);
   };
 
   const handleForgotPassword = async (e: { preventDefault: () => void; }) => {
@@ -176,11 +204,20 @@ const LoginPage = () => {
                   id="password"
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   placeholder="Password"
                   required
                 />
                 {errors.password && <span className="error">{errors.password}</span>}
+                {isSignUp && (
+                  <ul className="validation">
+                    <li className={passwordValidation.lower ? 'valid' : 'invalid'}>Password must contain a lower case letter</li>
+                    <li className={passwordValidation.upper ? 'valid' : 'invalid'}>Password must contain an upper case letter</li>
+                    <li className={passwordValidation.special ? 'valid' : 'invalid'}>Password must contain a special character</li>
+                    <li className={passwordValidation.number ? 'valid' : 'invalid'}>Password must contain a number</li>
+                    <li className={passwordValidation.length ? 'valid' : 'invalid'}>Password must contain at least 8 characters</li>
+                  </ul>
+                )}
               </div>
               {isSignUp && (
                 <>
