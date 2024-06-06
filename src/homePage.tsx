@@ -207,7 +207,12 @@ const HomePage: React.FC = () => {
                 setError('');
                 try {
                     // Fetch user images
-                    const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/viewallimages?userName=${userName}`);
+                    const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/viewallimages?userName=${userName}`,{
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
+                        }
+                    });
                     //console.log("response", response)
                     if (!response.ok) {
                         throw new Error('Failed to fetch thumbnails');
