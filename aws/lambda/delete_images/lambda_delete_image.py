@@ -27,7 +27,7 @@ def lambda_handler(event, context):
     # Delete each url and its corresponding records in image bucket, thumbnail bucket and dynamo
     responses = []
     for url in thumbnail_urls:
-        bucket_name = 'goldfishthumbnails'
+        bucket_name = 'goldfishthumbnail'
         key = '/'.join(url.split('/')[-2:])
         decoded_key = urllib.parse.unquote_plus(key)
         print(f"Decoded Thumbnail Key: {decoded_key}")
@@ -35,7 +35,7 @@ def lambda_handler(event, context):
         s3_response = s3.delete_object(Bucket=bucket_name, Key=decoded_key)
         print(f"S3 Delete Response: {s3_response}")
         
-        original_bucket_name = 'goldfishimages'
+        original_bucket_name = 'goldfishimage'
         original_key = decoded_key.replace('_thumbnail', '')
         user_id = original_key.split('/')[0]
         print(f"Original Key: {original_key}, UserID: {user_id}")

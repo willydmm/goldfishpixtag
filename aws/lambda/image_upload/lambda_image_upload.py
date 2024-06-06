@@ -7,7 +7,7 @@ import io
 import mimetypes
 
 s3 = boto3.client('s3')
-BUCKET_NAME = 'goldfishimages'
+BUCKET_NAME = 'goldfishimage'
 
 def lambda_handler(event, context):
     try:

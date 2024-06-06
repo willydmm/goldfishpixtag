@@ -11,10 +11,10 @@ const GoogleCallbackPage: React.FC = () => {
     const accessToken = params.get('access_token');
     const idToken = params.get('id_token');
 
-    // console.log('Complete URL:', fullUrl);
-    // console.log('Hash fragment:', hash);
-    // console.log('Parsed access token:', accessToken);
-    // console.log('Parsed ID token:', idToken);
+    console.log('Complete URL:', fullUrl);
+    console.log('Hash fragment:', hash);
+    console.log('Parsed access token:', accessToken);
+    console.log('Parsed ID token:', idToken);
 
     if (idToken && accessToken) {
       sessionStorage.setItem('idToken', idToken);  

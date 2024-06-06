@@ -6,10 +6,9 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     sns = boto3.client('sns')
     tag_pref_table = dynamodb.Table('TagNotification')
-    topic_arn = 'arn:aws:sns:us-east-1:885679614792:TagNotification'
     
     for record in event['Records']:
-        if record['eventName'] == 'INSERT':
+        if record['eventName'] in ['INSERT', 'MODIFY']:
             new_image = record['dynamodb']['NewImage']
             
             # Extract user ID and tags from the DynamoDB stream record
@@ -25,10 +24,11 @@ def lambda_handler(event, context):
                     tags = json.loads(new_image['Tags']['S'])
             print("tags:", tags)
             
-            # Retrieve user preferences from table
+            # Retrieve user preferences and topic ARN from table
             response = tag_pref_table.get_item(Key={'UserId': user_id})
             if 'Item' in response:
                 user_prefs = response['Item']['Tags'].split(',')
+                user_topic_arn = response['Item']['TopicArn']
 
                 # Check each tag in the uploaded image against the user's preferences
                 matched_tags = [tag for tag in tags if tag in user_prefs]
@@ -36,15 +36,15 @@ def lambda_handler(event, context):
                     # If there are matching tags, construct and send a notification
                     formatted_tags = ', '.join(matched_tags)
                     message = f"""
-*** New Image Uploaded ***
-You have uploaded an image with your preferred tag: {formatted_tags}.
-Log in to see your new images!
+*** New Tag Detected ***
+Your preferred tag has been detected: {formatted_tags}.
+Log in to see your images!
                     
 Regards,
 GoldFishPixTag
                     """
                     sns.publish(
-                        TopicArn=topic_arn,
+                        TopicArn=user_topic_arn,
                         Message=message,
                         Subject='New Image Notification'
                     )

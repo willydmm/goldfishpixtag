@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
                 return acc;
             }, {});
     
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/query_by_tags', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
             try {
                 const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
                 const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
-                const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/upload', {
+                const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/upload', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/octet-stream',
@@ -207,7 +207,7 @@ const HomePage: React.FC = () => {
                 setError('');
                 try {
                     // Fetch user images
-                    const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/viewallimages?userName=${userName}`,{
+                    const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/viewallimages?userName=${userName}`,{
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
@@ -269,7 +269,7 @@ const HomePage: React.FC = () => {
 
     const getPresignedUrl = async (imageUrl) => {
         try {
-            const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
+            const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -304,7 +304,7 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', { 
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -349,7 +349,7 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', {  
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -387,7 +387,7 @@ const HomePage: React.FC = () => {
         console.log('Deleting images:', thumbnailUrls);
         if (window.confirm(`Are you sure you want to delete selected ${thumbnailUrls.length} images?`)) {
             // Delete selected images if confirmed      
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/delete', {
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/delete', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -604,7 +604,7 @@ const HomePage: React.FC = () => {
                             onChange={(e) => setTagInput(e.target.value)}
                             placeholder="Enter tags to add, separated by commas"
                         />
-                        <button className='btn btn primary' onClick={handleAddTag}>Add Tags</button>
+                        <button className='btn btn-primary' onClick={handleAddTag}>Add Tags</button>
                     </div>
                 </div>
             )}
