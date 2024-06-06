@@ -23,6 +23,7 @@ const HomePage: React.FC = () => {
     const [copied, setCopied] = useState(false);
     const [copiedIndex, setCopiedIndex] = useState(null);
     const [selectedImages, setSelectedImages] = useState({});
+    const [searchPerformed, setSearchPerformed] = useState(false);
 
     useEffect(() => {
         const idToken = sessionStorage.getItem('idToken');
@@ -91,6 +92,7 @@ const HomePage: React.FC = () => {
     
             const result = await response.json();
             console.log("search response", result)
+            setSearchPerformed(true);
     
             if (result.links) {
                 const searchResultsWithPresignedUrls = await Promise.all(result.links.map(async (link, index) => {
@@ -521,7 +523,7 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
             ))
-        ) : searchQuery && searchResults.length === 0 ? (
+        ) : searchPerformed && searchQuery && searchResults.length === 0 ? (
             // Display "Not Found" message if search query is present but no results
             <div className="col text-center">
                 <p>No images found with tag '{searchQuery}'</p>

@@ -34,7 +34,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_tag_preference', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
             },
             body: JSON.stringify({ user_id: userId, tags: tags })
         });

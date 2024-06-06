@@ -157,6 +157,7 @@ textarea {
 .images{
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .modal {

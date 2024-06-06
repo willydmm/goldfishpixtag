@@ -10,6 +10,7 @@ const QueryByImagePage = () => {
     const [imageResults, setImageResults] = useState([]);
     const [copied, setCopied] = useState(false);
     const [copiedIndex, setCopiedIndex] = useState(null);
+    const [searchPerformed, setSearchPerformed] = useState(false);
 
     // Fetch username to display only images of current user
     const getUsernameFromToken = () => {
@@ -69,6 +70,7 @@ const QueryByImagePage = () => {
                 });
                 const result = await response.json();
                 console.log('Received response from API Gateway.', result);
+                setSearchPerformed(true);
                 
 
                 if (result.links) {
@@ -157,7 +159,7 @@ const QueryByImagePage = () => {
                     <form onSubmit={handleSubmitImage} className="upload mb-3">
                         <div className="input-group mb-3">
                             <input type="file" name="fileToUpload" id="fileToUpload" accept="image/*" className="form-control" />
-                            <button type="submit" className="btn btn-primary">Upload</button>
+                            <button type="submit" className="btn btn-primary">Search</button>
                         </div>
                     </form>
                     </div>
@@ -198,7 +200,7 @@ const QueryByImagePage = () => {
                             </div>
                         ))
                     ) : (
-                        <p>No similar images found.</p>
+                        searchPerformed && <p>No similar images found.</p>
                     )}
                 </div>
             </div>
