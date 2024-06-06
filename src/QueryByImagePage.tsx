@@ -51,6 +51,7 @@ const QueryByImagePage = () => {
                 return;
             }
     
+            console.log('Your user Id:', userName);
             console.log('File read successfully.');
             console.log('Sending request to API Gateway...');
     
@@ -58,17 +59,18 @@ const QueryByImagePage = () => {
                 const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
                 const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
     
-                const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_image', {
+                const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/query_by_image', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/octet-stream',
                         'Authorization': `Bearer ${idToken}`,
-                        'UserId': userName // Add authorization token
+                        'Userid': userName // Add authorization token
                     },
                     body: base64Content
                 });
                 const result = await response.json();
                 console.log('Received response from API Gateway.', result);
+                
 
                 if (result.links) {
                     const searchResultsWithPresignedUrls = await Promise.all(result.links.map(async (link, index) => {
