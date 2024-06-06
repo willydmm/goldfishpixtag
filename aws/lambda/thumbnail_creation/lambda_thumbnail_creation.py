@@ -5,9 +5,9 @@ import os
 
 s3 = boto3.client('s3')
 sns = boto3.client('sns')
-THUMBNAIL_BUCKET_NAME = 'goldfishthumbnails'
+THUMBNAIL_BUCKET_NAME = 'goldfishthumbnail'
 THUMBNAIL_SIZE = (300, 300)  # Desired maximum thumbnail size
-SNS_TOPIC_ARN = 'arn:aws:sns:us-east-1:885679614792:ThumbnailCreated'
+SNS_TOPIC_ARN = 'arn:aws:sns:ap-southeast-2:211125750614:ThumbnailCreated'
 
 def lambda_handler(event, context):
     print("Event: ", event)

@@ -1,7 +1,7 @@
 {
-    "region": "us-east-1",
-    "userPoolId": "us-east-1_0N9Getpag",
-    "clientId": "1g125sti60fmrm99f628dijnks",
+    "region": "ap-southeast-2",
+    "userPoolId": "ap-southeast-2_rxzLAaIYz",
+    "clientId": "772mviitmi4kslekhgs6aa0mas",
     "googleClientId": "1021687853588-9o9lt0bhq98erbuu9gdblj7dl65l5mu0.apps.googleusercontent.com",
     "redirectUri": "http://localhost:5173/google-callback"
 }

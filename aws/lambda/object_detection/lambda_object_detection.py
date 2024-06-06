@@ -10,7 +10,7 @@ dynamodb = boto3.resource('dynamodb')
 TABLE_NAME = 'UserImage'
 CONFTHRESH = 0.6  # Confidence threshold for object detection
 NMSTHRESH = 0.1 
-REGION = 'us-east-1'
+REGION = 'ap-southeast-2'
 
 def lambda_handler(event, context):
     # Extract the message from the SNS event
@@ -49,9 +49,9 @@ def lambda_handler(event, context):
 
     # Load YOLO model and configs
     try:
-        s3.download_file('goldfishconfigs', 'yolo_tiny_configs/coco.names', '/tmp/coco.names')
-        s3.download_file('goldfishconfigs', 'yolo_tiny_configs/yolov3-tiny.cfg', '/tmp/yolov3-tiny.cfg')
-        s3.download_file('goldfishconfigs', 'yolo_tiny_configs/yolov3-tiny.weights', '/tmp/yolov3-tiny.weights')
+        s3.download_file('goldfishconfigurations', 'yolo_tiny_configs/coco.names', '/tmp/coco.names')
+        s3.download_file('goldfishconfigurations', 'yolo_tiny_configs/yolov3-tiny.cfg', '/tmp/yolov3-tiny.cfg')
+        s3.download_file('goldfishconfigurations', 'yolo_tiny_configs/yolov3-tiny.weights', '/tmp/yolov3-tiny.weights')
     except Exception as e:
         print(f"Error downloading config files: {e}")
         raise e
