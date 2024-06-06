@@ -407,7 +407,7 @@ const HomePage: React.FC = () => {
                 <section className="py-5 px-5 text-center container">
                     <div className="row py-lg-5">
                         <div className="col-lg-4 col-md-4 mx-auto">
-                            {userInfo && <h2>Welcome, {userInfo.given_name}</h2>}
+                            {userInfo && <h2>(OLD BACK UP CODE) Welcome, {userInfo.given_name}</h2>}
                         </div>
                         <div className='spacer'></div>
                         {/* upload */}
