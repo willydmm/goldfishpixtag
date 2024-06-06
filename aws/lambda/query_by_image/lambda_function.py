@@ -6,7 +6,7 @@ from PIL import Image
 import numpy as np
 import cv2
 import os
-from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Key
 
 s3 = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb')
@@ -18,7 +18,7 @@ REGION = 'us-east-1'
 def lambda_handler(event, context):
     try:
         # Get the UserId from headers
-        user_id = event['headers'].get('Userid')
+        user_id = event['headers'].get('userid')
         if not user_id:
             return {
                 'statusCode': 400,
@@ -164,7 +164,7 @@ def do_prediction(image, net, LABELS):
 def query_images(tags, user_id):
     table = dynamodb.Table(TABLE_NAME)
     response = table.scan(
-        FilterExpression=Attr('UserId').eq(user_id)
+        FilterExpression=Key('UserId').eq(user_id)
     )
     items = response.get('Items', [])
 
