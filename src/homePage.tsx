@@ -81,7 +81,7 @@ const HomePage: React.FC = () => {
                 return acc;
             }, {});
     
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/query_by_tags', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -207,7 +207,7 @@ const HomePage: React.FC = () => {
                 setError('');
                 try {
                     // Fetch user images
-                    const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/viewallimages?userName=${userName}`,{
+                    const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/viewallimages?userName=${userName}`,{
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
@@ -304,7 +304,7 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', { 
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -349,7 +349,7 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', {  
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -387,7 +387,7 @@ const HomePage: React.FC = () => {
         console.log('Deleting images:', thumbnailUrls);
         if (window.confirm(`Are you sure you want to delete selected ${thumbnailUrls.length} images?`)) {
             // Delete selected images if confirmed      
-            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/delete', {
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/delete', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
