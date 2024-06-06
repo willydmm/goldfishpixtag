@@ -269,7 +269,7 @@ const HomePage: React.FC = () => {
 
     const getPresignedUrl = async (imageUrl) => {
         try {
-            const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
+            const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -604,7 +604,7 @@ const HomePage: React.FC = () => {
                             onChange={(e) => setTagInput(e.target.value)}
                             placeholder="Enter tags to add, separated by commas"
                         />
-                        <button className='btn btn primary' onClick={handleAddTag}>Add Tags</button>
+                        <button className='btn btn-primary' onClick={handleAddTag}>Add Tags</button>
                     </div>
                 </div>
             )}

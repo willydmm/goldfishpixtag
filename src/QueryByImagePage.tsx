@@ -59,7 +59,7 @@ const QueryByImagePage = () => {
                 const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
                 const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
     
-                const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/query_by_image', {
+                const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/query_by_image', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/octet-stream',
@@ -127,7 +127,7 @@ const QueryByImagePage = () => {
 
     const getPresignedUrl = async (imageUrl) => {
         try {
-            const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
+            const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
