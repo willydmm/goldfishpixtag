@@ -31,7 +31,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     };
 
     const handleAddTags = async () => {
-        const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/add_tag_preference', {
+        const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_tag_preference', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

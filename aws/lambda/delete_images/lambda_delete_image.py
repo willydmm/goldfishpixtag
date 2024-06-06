@@ -3,10 +3,12 @@ import json
 import urllib.parse
 
 def lambda_handler(event, context):
+    # Initialise s3 and dynamo client
     s3 = boto3.client('s3')
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('UserImage')
 
+    # parse body to get list of urls to delete
     try:
         body = json.loads(event['body'])
         thumbnail_urls = body['thumbnailUrls']
@@ -22,6 +24,7 @@ def lambda_handler(event, context):
             'body': json.dumps(f'Bad request: {str(e)}')
         }
 
+    # Delete each url and its corresponding records in image bucket, thumbnail bucket and dynamo
     responses = []
     for url in thumbnail_urls:
         bucket_name = 'goldfishthumbnails'
@@ -64,4 +67,3 @@ def lambda_handler(event, context):
         },
         'body': json.dumps(responses)
     }
-

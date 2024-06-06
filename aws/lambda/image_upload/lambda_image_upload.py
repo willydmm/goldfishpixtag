@@ -8,7 +8,6 @@ import mimetypes
 
 s3 = boto3.client('s3')
 BUCKET_NAME = 'goldfishimages'
-DYNAMODB_TABLE = 'UserImage'
 
 def lambda_handler(event, context):
     try:
@@ -31,7 +30,7 @@ def lambda_handler(event, context):
                 'headers': {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Headers': 'Content-Type,x-user-id',
-                    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+                    'Access-Control-Allow-Methods': 'OPTIONS,POST'
                 },
                 'body': json.dumps('The uploaded file is not a valid image.')
             }
@@ -44,16 +43,6 @@ def lambda_handler(event, context):
 
         # If the file is an image, upload to S3
         s3.put_object(Bucket=BUCKET_NAME, Key=s3_key, Body=file_content)
-
-        # Save metadata to DynamoDB
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(DYNAMODB_TABLE)
-        table.put_item(
-            Item={
-                'UserId': user_id,
-                'ImageKey': s3_key
-            }
-        )
 
         return {
             'statusCode': 200,
@@ -71,7 +60,7 @@ def lambda_handler(event, context):
             'headers': {
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Headers': 'Content-Type,x-user-id',
-                'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
             },
             'body': json.dumps(f'An error occurred: {str(e)}')
         }

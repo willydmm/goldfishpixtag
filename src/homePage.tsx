@@ -80,7 +80,7 @@ const HomePage: React.FC = () => {
                 return acc;
             }, {});
     
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
+            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/query_by_tags', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -142,8 +142,7 @@ const HomePage: React.FC = () => {
             try {
                 const base64Content = reader.result.split(',')[1]; // Remove the base64 prefix
                 const idToken = sessionStorage.getItem('idToken'); // Retrieve idToken from sessionStorage
-
-                const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/upload', {
+                const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/upload', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/octet-stream',
@@ -156,6 +155,7 @@ const HomePage: React.FC = () => {
                 console.log('Received response from API Gateway.');
                 const result = await response.json();
                 alert(result);
+                window.location.reload(); // Refresh the page after upload
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while uploading the image.');
@@ -197,7 +197,7 @@ const HomePage: React.FC = () => {
     };
     const userName = getUsernameFromToken();
 
-    // Display all images by fetching thumbnails and their presigned url
+    //Display all images by fetching thumbnails and their presigned url
     useEffect(() => {
         if (userName) {
             const fetchThumbnails = async () => {
@@ -205,14 +205,15 @@ const HomePage: React.FC = () => {
                 setError('');
                 try {
                     // Fetch user images
-                    const response = await fetch(`https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/viewallimages?userName=${userName}`);
+                    const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/viewallimages?userName=${userName}`);
+                    //console.log("response", response)
                     if (!response.ok) {
                         throw new Error('Failed to fetch thumbnails');
                     }
-                    const data = await response.json();
-                    console.log(data)
-                    const parsedBody = JSON.parse(data.body);
-                    // console.log(parsedBody)
+                    const parsedBody = await response.json();
+                    //console.log("data",data)
+                    // const parsedBody = JSON.parse(data.body);
+                    console.log("parsed body", parsedBody)
                     // Fetch presigned URLs for each thumbnail and include tags
                     const thumbnailsWithPresignedUrls = await Promise.all(parsedBody.images.map(async (image) => {
                         const presignedUrl = await getPresignedUrl(image.thumbnailUrl);
@@ -261,7 +262,7 @@ const HomePage: React.FC = () => {
 
     const getPresignedUrl = async (imageUrl) => {
         try {
-            const response = await fetch(`https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
+            const response = await fetch(`https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/presigned_url?url=${imageUrl}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -296,7 +297,7 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', { 
+            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -314,7 +315,8 @@ const HomePage: React.FC = () => {
     
             const result = await response.json();
             alert('Tags added successfully!');
-            console.log(result); // Optionally log or process result
+            window.location.reload(); // Refresh the page after upload
+            console.log(result);
     
             // Clear selections and close modal
             setTagInput('');
@@ -340,7 +342,7 @@ const HomePage: React.FC = () => {
         }
     
         try {
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', {  
+            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/add_delete_tag', {  
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -358,7 +360,8 @@ const HomePage: React.FC = () => {
     
             const result = await response.json();
             alert('Tags removed successfully!');
-            console.log(result); // Optionally log or process result
+            window.location.reload(); // Refresh the page after upload
+            console.log(result); 
     
             // Clear selections and close modal
             setTagInput('');
@@ -377,7 +380,7 @@ const HomePage: React.FC = () => {
         console.log('Deleting images:', thumbnailUrls);
         if (window.confirm(`Are you sure you want to delete selected ${thumbnailUrls.length} images?`)) {
             // Delete selected images if confirmed      
-            const response = await fetch('https://tw6nv3lpxl.execute-api.us-east-1.amazonaws.com/prod/delete', {
+            const response = await fetch('https://2l4hsonf2h.execute-api.us-east-1.amazonaws.com/prod/delete', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -388,6 +391,7 @@ const HomePage: React.FC = () => {
 
             if (response.ok) {
                 alert('Images deleted successfully.');
+                window.location.reload(); // Refresh the page after upload
             } else {
                 const errMsg = await response.text();
                 alert(`Failed to delete images: ${errMsg}`);
@@ -396,9 +400,6 @@ const HomePage: React.FC = () => {
         setSelectedImages({});
     };
 
-    if (!userName) return <p>Please log in to view images.</p>;
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>{error}</p>;
 
 
     return (
@@ -475,7 +476,11 @@ const HomePage: React.FC = () => {
 
                     {/* Thumbnails or Search Results */}
     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 images">
-        {searchResults.length > 0 ? (
+    {isLoading ? (
+        <p className="centered-message">Loading...</p>
+    ) : error ? (
+        <p className="centered-message">{error}</p>
+    ) : searchResults.length > 0 ? (
             // Display search results if available
             searchResults.map((image, index) => (
                 <div key={index} className="col image-card">

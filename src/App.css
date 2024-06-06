@@ -225,3 +225,11 @@ textarea {
   justify-content: center;
   max-width: 65rem;
 }
+
+.centered-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 50vh;  */
+  width: 100%; 
+}
