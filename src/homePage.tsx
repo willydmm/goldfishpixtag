@@ -65,11 +65,11 @@ const HomePage: React.FC = () => {
     const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
-    
+
         try {
             const idToken = sessionStorage.getItem('idToken');
             const tagsWithCounts = searchQuery.split(',').map(tag => tag.trim());
-    
+
             const tags = tagsWithCounts.reduce((acc, tagCount) => {
                 const match = tagCount.match(/^(.*)\s(\d+)$/);
                 if (match) {
@@ -80,7 +80,7 @@ const HomePage: React.FC = () => {
                 }
                 return acc;
             }, {});
-    
+
             const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/query_by_tags', {
                 method: 'POST',
                 headers: {
@@ -89,11 +89,11 @@ const HomePage: React.FC = () => {
                 },
                 body: JSON.stringify({ tags })
             });
-    
+
             const result = await response.json();
             console.log("search response", result)
             setSearchPerformed(true);
-    
+
             if (result.links) {
                 const searchResultsWithPresignedUrls = await Promise.all(result.links.map(async (link, index) => {
                     const presignedUrl = await getPresignedUrl(link);
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
                         tags: JSON.parse(result.tags[index])  // Parsing tags from the response
                     };
                 }));
-    
+
                 setSearchResults(searchResultsWithPresignedUrls);
                 console.log("search result", searchResultsWithPresignedUrls)
             } else {
@@ -193,7 +193,7 @@ const HomePage: React.FC = () => {
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
 
-            return JSON.parse(jsonPayload)['cognito:username']; 
+            return JSON.parse(jsonPayload)['cognito:username'];
         }
         return null;
     };
@@ -207,7 +207,7 @@ const HomePage: React.FC = () => {
                 setError('');
                 try {
                     // Fetch user images
-                    const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/viewallimages?userName=${userName}`,{
+                    const response = await fetch(`https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/viewallimages?userName=${userName}`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${sessionStorage.getItem('idToken')}`
@@ -258,7 +258,7 @@ const HomePage: React.FC = () => {
     const handleViewImage = async (thumbnailUrl) => {
         // Parse thumbnail url to image url 
         console.log(thumbnailUrl)
-        const baseUrl = thumbnailUrl.replace("_thumbnail", "").replace("goldfishthumbnails", "goldfishimages");
+        const baseUrl = thumbnailUrl.replace("_thumbnail", "").replace("goldfishthumbnail", "goldfishimage");
         console.log(baseUrl)
         // Fetch presigned url for full image
         const fullImageUrl = await getPresignedUrl(baseUrl);
@@ -295,16 +295,16 @@ const HomePage: React.FC = () => {
     const handleAddTag = async () => {
         const tagsToAdd = tagInput.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
         const selectedUrls = Object.keys(selectedImages).filter(url => selectedImages[url]);
-    
+
         console.log('Adding tags', tagsToAdd, 'to images', selectedUrls);
-    
+
         if (tagsToAdd.length === 0 || selectedUrls.length === 0) {
             alert('Please select images and enter tags to add.');
             return;
         }
-    
+
         try {
-            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', { 
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -313,43 +313,43 @@ const HomePage: React.FC = () => {
                 body: JSON.stringify({
                     url: selectedUrls,
                     // 1 for add
-                    type: 1,  
+                    type: 1,
                     tags: tagsToAdd
                 })
             });
-    
+
             if (!response.ok) throw new Error('Failed to add tags');
-    
+
             const result = await response.json();
             alert('Tags added successfully!');
             window.location.reload(); // Refresh the page after upload
             console.log(result);
-    
+
             // Clear selections and close modal
             setTagInput('');
             setSelectedImages({});
             setShowAddTagModal(false);
-    
+
         } catch (error) {
             console.error('Error adding tags:', error);
             alert(`Error: ${error.message}`);
         }
     };
-    
+
 
     const handleDeleteTag = async () => {
         const tagsToRemove = tagInput.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
         const selectedUrls = Object.keys(selectedImages).filter(url => selectedImages[url]);
-    
+
         console.log('Removing tags', tagsToRemove, 'from images', selectedUrls);
-    
+
         if (tagsToRemove.length === 0 || selectedUrls.length === 0) {
             alert('Please select images and enter tags to remove.');
             return;
         }
-    
+
         try {
-            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', {  
+            const response = await fetch('https://n77av6hvj3.execute-api.ap-southeast-2.amazonaws.com/prod/add_delete_tag', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -358,29 +358,29 @@ const HomePage: React.FC = () => {
                 body: JSON.stringify({
                     url: selectedUrls,
                     // 0 for remove
-                    type: 0,  
+                    type: 0,
                     tags: tagsToRemove
                 })
             });
-    
+
             if (!response.ok) throw new Error('Failed to remove tags');
-    
+
             const result = await response.json();
             alert('Tags removed successfully!');
             window.location.reload(); // Refresh the page after upload
-            console.log(result); 
-    
+            console.log(result);
+
             // Clear selections and close modal
             setTagInput('');
             setSelectedImages({});
             setShowAddTagModal(false);
-    
+
         } catch (error) {
             console.error('Error removing tags:', error);
             alert(`Error: ${error.message}`);
         }
     };
-    
+
 
     const handleBatchDelete = async (urls) => {
         const thumbnailUrls = Object.keys(selectedImages).filter(url => selectedImages[url]);
@@ -450,146 +450,134 @@ const HomePage: React.FC = () => {
                 <div className="album py-3" style={{ marginBottom: '100px' }}>
 
                     <div className="container gallery">
-                    <div className="controls">
-                        <div className="select-all">
-                            <input
-                                type="checkbox"
-                                id="select-all"
-                                checked={Object.keys(selectedImages).length === thumbnails.length && Object.values(selectedImages).every(val => val)}
-                                onChange={toggleSelectAll}
-                                className="select-all-checkbox"
-                            />
-                            <label htmlFor="select-all">Select All</label>
-                        </div>
-                        <div className="btn-group mx-2" role="group">
-                        <button className="btn btn-primary mx-1" onClick={() => setShowAddTagModal(true)}>Add Tag</button>
-                        <button className="btn btn-warning mx-1" onClick={() => setShowDeleteTagModal(true)}>Delete Tag</button>
-                        <button className="btn btn-danger mx-1" onClick={handleBatchDelete}>Delete Images</button>
-                        </div>
-                            <form onSubmit={handleSearch} className="form-inline">
-                            <div className="input-group mx-5">
+                        <div className="controls">
+                            <div className="select-all">
                                 <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Search for images..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    type="checkbox"
+                                    id="select-all"
+                                    checked={Object.keys(selectedImages).length === thumbnails.length && Object.values(selectedImages).every(val => val)}
+                                    onChange={toggleSelectAll}
+                                    className="select-all-checkbox"
                                 />
-                                <button className="btn btn-outline-primary" type="submit">Search</button>
-                                <button className="btn btn-outline-primary" onClick={() => setSearchQuery("")}>Clear</button>
+                                <label htmlFor="select-all">Select All</label>
                             </div>
-                        </form>
-                    </div>
-
-                    {/* Thumbnails or Search Results */}
-    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 images">
-    {isLoading ? (
-        <p className="centered-message">Loading...</p>
-    ) : error ? (
-        <p className="centered-message">{error}</p>
-    ) : searchResults.length > 0 ? (
-            // Display search results if available
-            searchResults.map((image, index) => (
-                <div key={index} className="col image-card">
-                    <div className="card shadow-sm">
-                        <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
-                        <div className="checkbox-container">
-                            <input
-                                type="checkbox"
-                                checked={isImageSelected(image.thumbnailUrl)}
-                                onChange={() => toggleImageSelection(image.thumbnailUrl)}
-                                className="image-checkbox"
-                            />
+                            <div className="btn-group mx-2" role="group">
+                                <button className="btn btn-primary mx-1" onClick={() => setShowAddTagModal(true)}>Add Tag</button>
+                                <button className="btn btn-warning mx-1" onClick={() => setShowDeleteTagModal(true)}>Delete Tag</button>
+                                <button className="btn btn-danger mx-1" onClick={handleBatchDelete}>Delete Images</button>
+                            </div>
+                            <form onSubmit={handleSearch} className="form-inline">
+                                <div className="input-group mx-5">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Search for images..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                    />
+                                    <button className="btn btn-outline-primary" type="submit">Search</button>
+                                    <button className="btn btn-outline-primary" onClick={() => setSearchQuery("")}>Clear</button>
+                                </div>
+                            </form>
                         </div>
-                    </div>
-                    <div className="card-body mt-1">
-                        <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
-                        <div className="d-flex justify-content-between align-items-center mt-2">
-                            <div className="btn-group">
-                                {/* Copy thumbnail url button */}
-                                <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
-                                    <button type="button" className="btn btn-secondary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
-                                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
-                                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-                                        </svg>
-                                    </button>
-                                </CopyToClipboard>
-                                {/* View full image button */}
-                                <button type="button" className="btn btn-secondary mx-1" onClick={() => handleViewImage(image.thumbnailUrl)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
-                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                                    </svg>
-                                </button>
-                            </div>
-                            {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
+
+                        {/* Thumbnails or Search Results */}
+                        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 images">
+                            {isLoading ? (
+                                <p className="centered-message">Loading...</p>
+                            ) : error ? (
+                                <p className="centered-message">{error}</p>
+                            ) : searchResults.length > 0 ? (
+                                // Display search results if available
+                                searchResults.map((image, index) => (
+                                    <div key={index} className="col image-card">
+                                        <div className="card shadow-sm">
+                                            <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
+                                            <div className="checkbox-container">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isImageSelected(image.thumbnailUrl)}
+                                                    onChange={() => toggleImageSelection(image.thumbnailUrl)}
+                                                    className="image-checkbox"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="card-body mt-1">
+                                            <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
+                                            <div className="d-flex justify-content-between align-items-center mt-2">
+                                                <div className="btn-group">
+                                                    {/* Copy thumbnail url button */}
+                                                    <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
+                                                        <button type="button" className="btn btn-secondary">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
+                                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                                            </svg>
+                                                        </button>
+                                                    </CopyToClipboard>
+                                                    {/* View full image button */}
+                                                    <button type="button" className="btn btn-secondary mx-1" onClick={() => handleViewImage(image.thumbnailUrl)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : searchPerformed && searchQuery && searchResults.length === 0 ? (
+                                // Display "Not Found" message if search query is present but no results
+                                <div className="col text-center">
+                                    <p>No images found with tag '{searchQuery}'</p>
+                                </div>
+                            ) : (
+                                // Display thumbnails if no search is performed or search query is cleared
+                                thumbnails.map((image, index) => (
+                                    <div key={index} className="col image-card">
+                                        <div className="card shadow-sm">
+                                            <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
+                                            <div className="checkbox-container">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isImageSelected(image.thumbnailUrl)}
+                                                    onChange={() => toggleImageSelection(image.thumbnailUrl)}
+                                                    className="image-checkbox"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="card-body mt-1">
+                                            <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
+                                            <div className="d-flex justify-content-between align-items-center mt-2">
+                                                <div className="btn-group">
+                                                    {/* Copy thumbnail url button */}
+                                                    <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
+                                                        <button type="button" className="btn btn-secondary">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
+                                                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
+                                                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+                                                            </svg>
+                                                        </button>
+                                                    </CopyToClipboard>
+                                                    {/* View full image button */}
+                                                    <button type="button" className="btn btn-secondary mx-1" onClick={() => handleViewImage(image.thumbnailUrl)}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
+                                                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
-            ))
-        ) : searchPerformed && searchQuery && searchResults.length === 0 ? (
-            // Display "Not Found" message if search query is present but no results
-            <div className="col text-center">
-                <p>No images found with tag '{searchQuery}'</p>
-            </div>
-        ) : (
-            // Display thumbnails if no search is performed or search query is cleared
-            thumbnails.map((image, index) => (
-                <div key={index} className="col image-card">
-                    <div className="card shadow-sm">
-                        <img src={image.presignedUrl} className="bd-placeholder-img card-img-top" alt={`Thumbnail ${index}`} style={{ objectFit: 'cover', height: '225px' }} />
-                        <div className="checkbox-container">
-                            <input
-                                type="checkbox"
-                                checked={isImageSelected(image.thumbnailUrl)}
-                                onChange={() => toggleImageSelection(image.thumbnailUrl)}
-                                className="image-checkbox"
-                            />
-                        </div>
-                    </div>
-                    <div className="card-body mt-1">
-                        <p className="card-text">Tags: {image.tags.length > 0 ? image.tags.join(', ') : 'No tag identified'}</p>
-                        <div className="d-flex justify-content-between align-items-center mt-2">
-                            <div className="btn-group">
-                                {/* Copy thumbnail url button */}
-                                <CopyToClipboard text={image.thumbnailUrl} onCopy={() => handleCopy(index)}>
-                                    <button type="button" className="btn btn-secondary">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-clipboard" viewBox="0 0 16 16">
-                                            <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z" />
-                                            <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-                                        </svg>
-                                    </button>
-                                </CopyToClipboard>
-                                {/* View full image button */}
-                                <button type="button" className="btn btn-secondary mx-1" onClick={() => handleViewImage(image.thumbnailUrl)}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-eye" viewBox="0 0 16 16">
-                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
-                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
-                                    </svg>
-                                </button>
-                            </div>
-                            {copied && copiedIndex === index && <span style={{ color: 'green' }}>Copied!</span>}
-                        </div>
-                    </div>
-                </div>
-            ))
-        )}
-    </div>
-
-
-                    
-
-
-
-
-
-                    </div>
-                </div>
-
-
-
-
             </main >
             {/* AddTag Modal */}
             {showAddTagModal && (
