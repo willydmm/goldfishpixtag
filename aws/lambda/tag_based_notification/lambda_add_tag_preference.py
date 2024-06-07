@@ -159,5 +159,3 @@ def lambda_handler(event, context):
             },
             'body': json.dumps('Failed to update tag preferences')
         }
-
-
